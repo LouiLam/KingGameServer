@@ -1,0 +1,124 @@
+package database.client;
+
+
+import java.io.IOException;
+import java.io.Reader;
+import java.util.List;
+import java.util.Map;
+
+import object.User;
+
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+
+import config.ConfigParser;
+import database.dao.LoginDao;
+
+public class IbatisClient extends DatabaseClient{
+
+	SqlSessionFactory sqlSessionFactory;
+	private static IbatisClient ibatisClient = new IbatisClient();
+	private final int SUCCESS = 1;
+	private final int FAIL = 2;
+	
+	
+	public static IbatisClient getInstance(){
+		return ibatisClient;
+	}
+	
+	private IbatisClient(){
+		String resource = ConfigParser.getInstance().getDatabaseConfigRes();
+		Reader reader = null;
+		try {
+			reader = Resources.getResourceAsReader(resource);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}  
+        SqlSessionFactoryBuilder builder = new SqlSessionFactoryBuilder();
+        sqlSessionFactory = builder.build(reader);
+        try {
+			reader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public SqlSessionFactory getSqlSessionFactory() {
+		return sqlSessionFactory;
+	}
+
+	public void setSqlSessionFactory(SqlSessionFactory sqlSessionFactory) {
+		this.sqlSessionFactory = sqlSessionFactory;
+	}
+
+	@Override
+	public Map login(User user) {
+		SqlSession sqlSession = sqlSessionFactory.openSession();
+		Map map = null;
+		try{
+			LoginDao loginDao = sqlSession.getMapper(LoginDao.class);
+			map = loginDao.selectUser(user);
+		}finally{
+			sqlSession.close();
+		}
+		return map;
+	}
+
+	@Override
+	public int register(User user) {
+		SqlSession sqlSession = sqlSessionFactory.openSession();
+		int result = 0;
+		try{
+			LoginDao loginDao = sqlSession.getMapper(LoginDao.class);
+			result = loginDao.countUser(user.getLoginId());
+			if(result != 0){
+				sqlSession.close();
+				return this.FAIL;
+			}
+			loginDao.insertUser(user);
+			sqlSession.commit();
+		}finally{
+			sqlSession.close();
+		}
+		return this.SUCCESS;
+	}
+	
+	@Override
+	public void loginOK(Map userInfoMap) {
+		SqlSession sqlSession = sqlSessionFactory.openSession();
+		try{
+			String loginId = (String) userInfoMap.get("loginId");
+			LoginDao loginDao = sqlSession.getMapper(LoginDao.class);
+			userInfoMap.put("allGameGradeMapList", loginDao.selectAllGameGradeByLoginId(loginId));
+			List<Map> friendInfoMapList = loginDao.selectUserRelationship(loginId);
+			for(Map friendInfoMap : friendInfoMapList){
+				List<Map> allGameGradeMapList = loginDao.selectAllGameGradeByLoginId(
+						(String) friendInfoMap.get("loginId"));
+				friendInfoMap.put("allGameGradeMapList", allGameGradeMapList);
+			}
+			userInfoMap.put("allFriendInfoMapList", friendInfoMapList);
+			loginDao.insertLoginRecord(userInfoMap);
+			sqlSession.commit();
+		}finally{
+			sqlSession.close();
+		}
+	}
+	
+	public List test() {
+		SqlSession sqlSession = sqlSessionFactory.openSession();
+		int result = 0;
+		List test = null;
+		try{
+			test = sqlSession.selectList("test");
+		}finally{
+			sqlSession.close();
+		}
+		return test;
+	}
+
+	
+	
+	
+}

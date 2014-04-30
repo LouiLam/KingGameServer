@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<serverConfig>
+    
+    <ip>192.168.1.205</ip>
+	<port>4322</port>
+	<maxUserNum>10</maxUserNum>
+	
+	<centerServer>
+	    <ip>127.0.0.1</ip>
+	    <port>3333</port>
+	    <updateDataTime>10000</updateDataTime>
+	</centerServer>
+	
+	
+	<rooms>
+	    <room id="1" name="酒吧" minUchip="0" minGameChip="1000" defaultGameChip="2000" maxGameChip="4000" maxTableUserNum="10" gameUserNum="2"></room>
+	    <room id="2" name="俱乐部" minUchip="10000" minGameChip="1000" defaultGameChip="2000" maxGameChip="4000" maxTableUserNum="10" gameUserNum="6"></room>
+	    <room id="3" name="顶级酒店" minUchip="100000" minGameChip="1000" defaultGameChip="2000" maxGameChip="4000" maxTableUserNum="10" gameUserNum="6"></room>
+	    <room id="4" name="豪华游轮" minUchip="1000000" minGameChip="1000" defaultGameChip="2000" maxGameChip="4000" maxTableUserNum="10" gameUserNum="6"></room>
+	 	<room id="5" name="天堂岛" minUchip="10000000" minGameChip="1000" defaultGameChip="2000" maxGameChip="4000" maxTableUserNum="10" gameUserNum="6"></room>   
+	</rooms>
+</serverConfig>

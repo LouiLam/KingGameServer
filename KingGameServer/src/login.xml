@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="login">
+    <resultMap type="User" id="ormUser">
+    </resultMap>
+    <select id="selectSessionKey" resultType="Map" parameterType="String">
+		select * from usersessionkey where sessionKey = #{sessionKey}
+	</select>
+	
+    <select id="selectUserInfoByUid" resultType="Map" parameterType="String">
+		select i.uid, i.uface, i.uname, g.uchip from userinfo i, usergame g where i.uid = #{uid} and g.uid = i.uid;
+	</select>
+	
+	
+	<select id="test"  resultType="Map">
+		select * from userinfo
+	</select>
+</mapper>  
+

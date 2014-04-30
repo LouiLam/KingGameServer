@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<globalConfig>
+	
+    <serverConfig>config/ServerConfig.xml</serverConfig>
+    <databaseConfig>DatabaseConfig.xml</databaseConfig>
+	<socketHandlerConfig>config/SocketHandlerConfig.properties</socketHandlerConfig>
+	<logConfig>config/Log4j.properties</logConfig>
+	
+</globalConfig>

@@ -1,0 +1,23 @@
+package database.client;
+
+import java.util.List;
+import java.util.Map;
+
+import object.User;
+
+
+public abstract class DatabaseClient {
+	
+	private static DatabaseClient databaseClient = IbatisClient.getInstance();
+
+	public static DatabaseClient getInstance(){
+		return databaseClient;
+	}
+	public abstract Map login(User user);
+	public abstract void loginOK(Map userInfoMap);
+//	public abstract Map getGrade(Map map);
+//	public abstract List getFriendList(String loginId);
+	public abstract int register(User user);
+//	public abstract List getAllFriendAllGameGrade(List<Map> friendList);
+	
+}
