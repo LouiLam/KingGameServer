@@ -1,6 +1,6 @@
 package client.msg.received;
 
-import obj.PKHttpStringMgr;
+import object.PKHttpStringMgr;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
