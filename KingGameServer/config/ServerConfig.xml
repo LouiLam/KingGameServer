@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <serverConfig>
     
-    <ip>192.168.1.205</ip>
+    <ip>192.168.1.101</ip>
 	<port>4322</port>
 	<maxUserNum>10</maxUserNum>
 	

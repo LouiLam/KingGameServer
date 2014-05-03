@@ -104,11 +104,10 @@ public class CreatePKMessageReceived1002 extends SocketMessageReceived {
 			if (httppHttpResponse2.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
 				pk.sql_id=Long.parseLong(EntityUtils.toString(httppHttpResponse2
 						.getEntity()));
-				PKManager.getInstance().add(pk);
-				PKManager.getInstance().pkMap.put(pk.sql_id, pk);
-				UserManager.getInstance().getUserByName(name).roomIndex=PKManager.getInstance().getPKNum()-1;
-				PKManager.getInstance().getPKByIndex(PKManager.getInstance().getPKNum()-1).channelGroup.add(channel);
-				PKManager.getInstance().getPKByIndex(PKManager.getInstance().getPKNum()-1).channelHost=channel;
+				PKManager.getInstance().put(pk.sql_id, pk);
+				UserManager.getInstance().getUserByName(name).roomSqlID=pk.sql_id;
+				PKManager.getInstance().getPKBySqlID(pk.sql_id).channelGroup.add(channel);
+				PKManager.getInstance().getPKBySqlID(pk.sql_id).channelHost=channel;
 				MessageHandler.channelGroup.write(new CreatePKResultMessage2002(pk,0).pack());
 				System.out.println("房间创建成功"+pk.sql_id);
 			}

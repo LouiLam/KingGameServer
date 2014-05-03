@@ -10,13 +10,13 @@ import org.jboss.netty.buffer.ChannelBuffers;
  * @author Administrator
  *
  */
-public class LeavePKResultMessage2004 extends SocketMessageToSend {
+public class NormalLeavePKResultMessage2011 extends SocketMessageToSend {
 
 	int camp;
 	int seatID;
 	String name;
 
-	public LeavePKResultMessage2004(String name, int camp, int seatID) {
+	public NormalLeavePKResultMessage2011(String name, int camp, int seatID) {
 		this.seatID = seatID;
 		this.camp = camp;
 		this.name = name;
@@ -25,7 +25,7 @@ public class LeavePKResultMessage2004 extends SocketMessageToSend {
 	@Override
 	public ChannelBuffer pack() {
 		ChannelBuffer cb = ChannelBuffers.dynamicBuffer();
-		cb.writeShort(2004);
+		cb.writeShort(2011);
 		cb.writeShort(camp);
 		cb.writeShort(seatID);
 		cb.writeShort(name.getBytes().length);

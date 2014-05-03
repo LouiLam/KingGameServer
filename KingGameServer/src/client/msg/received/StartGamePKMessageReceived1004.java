@@ -1,6 +1,8 @@
 package client.msg.received;
 
 import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import object.PKHttpStringMgr;
 
@@ -14,11 +16,11 @@ import org.apache.http.util.EntityUtils;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
 
-import client.msg.send.EndGamePKResultMessage2007;
-import client.msg.send.StartGamePKResultMessage2006;
-
 import pk.PK;
 import pk.PKManager;
+import user.PKUser;
+import client.msg.send.RoomPKMessage2001;
+import client.msg.send.StartGamePKResultMessage2006;
 
 public class StartGamePKMessageReceived1004 extends SocketMessageReceived {
 	long sql_id;
@@ -30,39 +32,35 @@ public class StartGamePKMessageReceived1004 extends SocketMessageReceived {
 
 	@Override
 	public void logicHandle(ChannelBuffer buffer, Channel channel) {
-		for (int i = 0; i < PKManager.getInstance().getPKNum(); i++) {
-			PK pk=PKManager.getInstance().getPKByIndex(i);
-			if(pk.sql_id==sql_id)
-			{
-				for (int j = 0; j < pk.users.length; j++) {
-					if(pk.users[j]!=null)
+		
+		 HashMap<Long,PK> map=	PKManager.getInstance().getPKMap();
+			Iterator<Long> it = map.keySet().iterator();
+			while(it.hasNext()){
+				long key = it.next();
+				PK pk = map.get(key);
+				Iterator<String> it1=pk.userMap.keySet().iterator();
+				while(it.hasNext()){
+					String key1 = it1.next();
+					PKUser user = pk.userMap.get(key1);
+					if(user.Camp==1)
 					{
-						if(pk.users[j].Camp==1)
-						{
-							gt+=pk.users[j].uid+"|";
-						}
-						else
-						{
-							yt+=pk.users[j].uid+"|";
-						}
+						gt+=user.uid+"|";
+					}
+					else
+					{
+						yt+=user.uid+"|";
 					}
 				}
 				//去掉最后一个|号
 				gt=gt.substring(0, gt.length()-1);
 				yt=yt.substring(0, yt.length()-1);
-				
 			}
-		}
+	
 		try {
 			httpPostFightStart(channel);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-//		UserManager.getInstance().getUserByName(name).roomIndex=PKManager.getInstance().getPKNum()-1;
-//		PKManager.getInstance().getPKByIndex(index).channelGroup.add(channel);
-//		int seatID=camp==1?PKManager.getInstance().getPKByIndex(index).faqiSeatCount-1:PKManager.getInstance().getPKByIndex(index).yingzhanSeatCount-1;
-//		PKManager.getInstance().getPKByIndex(index).channelGroup
-//				.write(new JoinPKResultMessage2003(name,camp,seatID,PKManager.getInstance().getPKByIndex(index).users).pack());
 	}
 	public  void  httpPostFightStart(Channel channel) throws Exception {
 		String url="http://www.woowgo.com/yxlm/member/fight_add.php?";
@@ -85,7 +83,7 @@ public class StartGamePKMessageReceived1004 extends SocketMessageReceived {
             	String str=EntityUtils.toString(response1
  						.getEntity());
                 System.out.println(response1.getStatusLine());
-                PK pk=PKManager.getInstance().pkMap.get(sql_id);
+                PK pk=PKManager.getInstance().getPKBySqlID(sql_id);
                 if(response1.getStatusLine().getStatusCode()==HttpStatus.SC_OK&&str.equals("11"))
                 {
                 	//用户点击开始游戏按钮成功

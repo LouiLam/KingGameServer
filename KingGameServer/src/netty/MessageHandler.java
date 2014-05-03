@@ -19,6 +19,7 @@ import pk.PKManager;
 import user.PKUser;
 import user.UserManager;
 import client.msg.received.SocketMessageReceived;
+import client.msg.send.HostLeavePKResultMessage2009;
 import client.msg.send.LeavePKResultMessage2004;
 
 public class MessageHandler extends SimpleChannelHandler {
@@ -47,34 +48,32 @@ public class MessageHandler extends SimpleChannelHandler {
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) {
 		if (e.getCause() instanceof IOException) {
-			PKUser user = UserManager.getInstance().removeUser(e.getChannel());
-			if (user != null) {
-				int roomIndex = user.roomIndex;
-				if (roomIndex != -1) {
-					PKManager.getInstance().getPKByIndex(roomIndex)
-							.removePKUser(user.name, user.Camp, user.seatID);
-					PKManager.getInstance().getPKByIndex(roomIndex).channelGroup
-							.write(new LeavePKResultMessage2004(user.name,
-									user.Camp, user.seatID).pack());
-					if(PKManager.getInstance().getPKByIndex(roomIndex).channelHost==ctx.getChannel())
+			PKUser userTemp = UserManager.getInstance().removeUser(e.getChannel());
+			if (userTemp != null) {
+				long roomSqlID = userTemp.roomSqlID;
+				if (roomSqlID != -1) {
+					//房主退出
+					if(PKManager.getInstance().getPKBySqlID(roomSqlID).channelHost==ctx.getChannel())
 					{
-						PK obj=PKManager.getInstance().removePK(roomIndex);
-						for (int i = 0; i < obj.users.length; i++) {
-							 PKUser user1= UserManager.getInstance().getUserByName(obj.users[i].name);
-							 user1.roomIndex=-1;
-						}
-						
 						logger.info("房主退出，解散房间,通知其他玩家退出房间，并且处理其他玩家退出逻辑");
-						//解散挑战条目
+						PKManager.getInstance().getPKBySqlID(roomSqlID).channelGroup
+						.write(new HostLeavePKResultMessage2009(userTemp.name).pack());
+						PKManager.getInstance().removePK(roomSqlID);
 					}
-					if(PKManager.getInstance().getPKByIndex(roomIndex).count==0)
+					//非房主退出
+					else
 					{
-						PKManager.getInstance().removePK(roomIndex);
-						logger.info("房间无人，解散房间");
-						//解散挑战条目
+						PK pk=PKManager.getInstance().getPKBySqlID(roomSqlID);
+						PKUser user=pk.getPKUserByName(userTemp.name);
+						pk.channelGroup
+						.write(new LeavePKResultMessage2004(user.name,
+								user.Camp, user.seatID).pack());
+						PKManager.getInstance().getPKBySqlID(roomSqlID)
+						.removePKUser(user.name, user.Camp, user.seatID);
 					}
+					
 				
-					logger.info("玩家断线，移除所在房间roomIndex" + roomIndex+"玩家数量"+UserManager.getInstance().getCurUserNum());
+					logger.info("玩家断线，移除所在房间roomSqlID" + roomSqlID+"玩家数量"+UserManager.getInstance().getCurUserNum());
 				}
 			}
 			logger.info("玩家断线");

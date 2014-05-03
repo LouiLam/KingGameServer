@@ -2,6 +2,8 @@ package client.msg.received;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
@@ -69,8 +71,12 @@ public class LoginMessage1001 extends SocketMessageReceived{
 //		}
 		logger.info("玩家登陆成功"  + ", ip=" + channel.getRemoteAddress());
 		//如果有PK房间列表，就发送给推送房间信息给登录用户
-		for (int i = 0; i < PKManager.getInstance().getPKNum(); i++) {
-			PK pk=PKManager.getInstance().getPKByIndex(i);
+		
+		 HashMap<Long,PK> map=	PKManager.getInstance().getPKMap();
+		Iterator<Long> it = map.keySet().iterator();
+		while(it.hasNext()){
+			long key = it.next();
+			PK pk = map.get(key);
 			channel.write(new RoomPKMessage2001(pk).pack());
 		}
 		channel.write(new RoomPKFinishMessage2008().pack());

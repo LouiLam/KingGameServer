@@ -1,5 +1,7 @@
 package pk;
 
+import java.util.HashMap;
+
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.group.ChannelGroup;
 import org.jboss.netty.channel.group.DefaultChannelGroup;
@@ -17,12 +19,13 @@ public class PK {
 	
 	public int type;// 游戏对战人数类型
 	public int point;// 挑战点数
-	public PKUser[] users = new PKUser[10];
+//	public PKUser[] users = new PKUser[10];
 	public int faqiSeatCount = 0;
 	public int yingzhanSeatCount = 0;
 	public int count = 0;// 挑战人数计数
 	public ChannelGroup channelGroup = new DefaultChannelGroup();// 挑战中玩家通道
 	public Channel channelHost;// 房主玩家通道
+	public HashMap<String,PKUser > userMap=new HashMap<String,PKUser >();
 	public PK(String name, String title, String area, String map, String des,int type,
 			int point,int hostUid) {
 		super();
@@ -33,41 +36,29 @@ public class PK {
 		this.des = des;
 		this.type = type;
 		this.point = point;
-		users[count] = new PKUser(name, 1, faqiSeatCount,hostUid);
+		userMap.put(name,new PKUser(name, 1, faqiSeatCount,hostUid));
 		faqiSeatCount++;
 		count++;
 	}
-
+	public PKUser getPKUserByName(String name)
+	{
+		return userMap.get(name);
+	}
 	public void addPKUser(String name, int camp,int uid) {
 		if (camp == 1) {
-			for (int i = 0; i < users.length; i++) {
-				if (users[i]==null) {
-					users[count] = new PKUser(name, camp, faqiSeatCount,uid);
-					faqiSeatCount++;
-					break;
-				}
-			}
+			userMap.put(name, new PKUser(name, camp, faqiSeatCount,uid));
+			faqiSeatCount++;
 			
 		} else {
-			for (int i = 0; i < users.length; i++) {
-				if (users[i]==null) {
-					users[count] = new PKUser(name, camp, yingzhanSeatCount,uid);
-					yingzhanSeatCount++;
-					break;
-				}
-			}
+			userMap.put(name, new PKUser(name, camp, yingzhanSeatCount,uid));
+			yingzhanSeatCount++;
 		}
 		count++;
 	}
 
 	public void removePKUser(String name, int camp, int seatID) {
 		count--;
-		for (int i = 0; i < users.length; i++) {
-			if (users[i].name.equals(name)) {
-				users[count] = null;
-				break;
-			}
-		}
+		userMap.remove(name);
 		if (camp == 1) {
 			faqiSeatCount--;
 

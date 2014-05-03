@@ -1,6 +1,5 @@
 package pk;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.apache.log4j.Logger;
@@ -13,10 +12,10 @@ public class PKManager {
 	private static Logger logger = Logger.getLogger(UserManager.class);
 
 	private static PKManager myself;
-	private ArrayList<PK> pkList ;
-	public HashMap<Long,PK> pkMap ;
+//	private HashMap<Integer,PK> pkList ;
+	private HashMap<Long,PK> pkMap ;
 	private PKManager(){
-		pkList=new ArrayList<PK>();
+//		pkList=new ArrayList<PK>();
 		pkMap=new HashMap<Long, PK>();
 	}
 	
@@ -27,7 +26,10 @@ public class PKManager {
 		return myself;
 	}
 	
-	
+	public   HashMap<Long,PK> getPKMap()
+	{
+		return pkMap;
+	}
 	public void init(){
 //		for (int i = 0; i < 10; i++) {
 //			PK pk= new PK("标题1", "区域"+i, "地图名字", i, 50);
@@ -49,31 +51,31 @@ public class PKManager {
 //		logger.info("roomIdRoomMap ===" + roomIdRoomMap.size());
 		
 	}
-	public void add(PK pk)
+	public void put(long sqlid,PK pk)
 	{
-		pkList.add(pk);
+		pkMap.put(sqlid, pk);
 	}
 	/**
 	 * 获取挑战条目数量 
 	 * @return
 	 */
 	public int getPKNum(){
-		return pkList.size();
+		return pkMap.size();
 	}
 
-	public PK removePK(int index)
+	public PK removePK(long sqlid)
 	{
-		return pkList.remove(index);
+		return pkMap.remove(sqlid);
 	}
-	public boolean removePK(PK pk)
-	{
-		return pkList.remove(pk);
-	}
+//	public boolean removePK(PK pk)
+//	{
+//		return pkMap.remove(key))remove(pk);
+//	}
 	/**
 	 * 获取挑战条目
 	 * @return
 	 */
-	public PK getPKByIndex(int index) {
-		return pkList.get(index);
+	public PK getPKBySqlID(long sqlid) {
+		return pkMap.get(sqlid);
 	}
 }
