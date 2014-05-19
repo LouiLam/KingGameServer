@@ -8,7 +8,6 @@ import pk.PKManager;
 import user.PKUser;
 import user.UserManager;
 import client.msg.send.HostLeavePKResultMessage2009;
-import client.msg.send.LeavePKResultMessage2004;
 import client.msg.send.NoCanStartGamePKMessage2010;
 import client.msg.send.NormalLeavePKResultMessage2011;
 
@@ -27,11 +26,11 @@ public class NormalLeavePKMessageReceived1006 extends SocketMessageReceived {
 		long roomIndex=usertemp.roomSqlID;
 		usertemp.roomSqlID=-1;
 		PK pk=PKManager.getInstance().getPKBySqlID(roomIndex);
-		PKUser user=pk.getPKUserByName(usertemp.name);
+		PKUser user=pk.getPKUserByRoleName(usertemp.roleName);
 		pk.channelGroup
-		.write(new NormalLeavePKResultMessage2011(user.name,
+		.write(new NormalLeavePKResultMessage2011(user.roleName,
 				user.Camp, user.seatID).pack());
-		pk.removePKUser(user.name, user.Camp, user.seatID);
+		pk.removePKUser(user.id, user.Camp, user.seatID);
 		if(channel!=pk.channelHost)
 		{
 			pk.channelHost.write(new NoCanStartGamePKMessage2010().pack());
@@ -39,7 +38,7 @@ public class NormalLeavePKMessageReceived1006 extends SocketMessageReceived {
 		else
 		{
 			PKManager.getInstance().getPKBySqlID(roomIndex).channelGroup
-			.write(new HostLeavePKResultMessage2009(usertemp.name).pack());
+			.write(new HostLeavePKResultMessage2009(usertemp.roleName).pack());
 			PKManager.getInstance().removePK(roomIndex);
 		}
 	
@@ -52,7 +51,7 @@ public class NormalLeavePKMessageReceived1006 extends SocketMessageReceived {
 //			// TODO Auto-generated catch block
 //			e1.printStackTrace();
 //		}
-////		String url="http://www.woowgo.com/yxlm/member/fight_add.php?";
+////		String url="http://www..com/yxlm/member/fight_add.php?";
 ////		url=url+"action=stac&id="+20+"&status=1&gt="+"2|3|4"+"&yt="+"10|11|12";	
 ////				
 ////		try {

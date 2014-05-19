@@ -87,7 +87,7 @@ public class EndGamePKMessageReceived1005 extends SocketMessageReceived {
 	// // TODO Auto-generated catch block
 	// e1.printStackTrace();
 	// }
-	// // String url="http://www.woowgo.com/yxlm/member/fight_add.php?";
+	// // String url="http://www..com/yxlm/member/fight_add.php?";
 	// //
 	// url=url+"action=stac&id="+20+"&status=1&gt="+"2|3|4"+"&yt="+"10|11|12";
 	// //

@@ -39,7 +39,7 @@ public class StartGamePKMessageReceived1004 extends SocketMessageReceived {
 				long key = it.next();
 				PK pk = map.get(key);
 				Iterator<String> it1=pk.userMap.keySet().iterator();
-				while(it.hasNext()){
+				while(it1.hasNext()){
 					String key1 = it1.next();
 					PKUser user = pk.userMap.get(key1);
 					if(user.Camp==1)
@@ -63,7 +63,7 @@ public class StartGamePKMessageReceived1004 extends SocketMessageReceived {
 		}
 	}
 	public  void  httpPostFightStart(Channel channel) throws Exception {
-		String url="http://www.woowgo.com/yxlm/member/fight_add.php?";
+		String url="http://www.hexcm.com/yxlm/member/fight_add.php?";
 		String gtEncode = URLEncoder.encode(gt, "utf-8" ); 
 		String ytEncode = URLEncoder.encode(yt, "utf-8" ); 
 		String uu="action=stac&id="+sql_id+"&status=1&gt="+gtEncode+"&yt="+ytEncode;	
@@ -89,12 +89,12 @@ public class StartGamePKMessageReceived1004 extends SocketMessageReceived {
                 	//用户点击开始游戏按钮成功
                 	//用户点击结束游戏按钮成功，解散
                 	
-                	pk.channelGroup.write(new StartGamePKResultMessage2006(0,pk.name).pack());
+                	pk.channelGroup.write(new StartGamePKResultMessage2006(0,pk.id).pack());
                 }
                 else
                 {
                 	//用户点击开始游戏按钮失败
-                	channel.write(new StartGamePKResultMessage2006(1,pk.name).pack());
+                	channel.write(new StartGamePKResultMessage2006(1,pk.id).pack());
                 }
                 HttpEntity entity1 = response1.getEntity();
                 // do something useful with the response body
@@ -123,7 +123,7 @@ public class StartGamePKMessageReceived1004 extends SocketMessageReceived {
 //			// TODO Auto-generated catch block
 //			e1.printStackTrace();
 //		}
-////		String url="http://www.woowgo.com/yxlm/member/fight_add.php?";
+////		String url="http://www..com/yxlm/member/fight_add.php?";
 ////		url=url+"action=stac&id="+20+"&status=1&gt="+"2|3|4"+"&yt="+"10|11|12";	
 ////				
 ////		try {

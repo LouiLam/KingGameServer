@@ -57,19 +57,19 @@ public class MessageHandler extends SimpleChannelHandler {
 					{
 						logger.info("房主退出，解散房间,通知其他玩家退出房间，并且处理其他玩家退出逻辑");
 						PKManager.getInstance().getPKBySqlID(roomSqlID).channelGroup
-						.write(new HostLeavePKResultMessage2009(userTemp.name).pack());
+						.write(new HostLeavePKResultMessage2009(userTemp.id).pack());
 						PKManager.getInstance().removePK(roomSqlID);
 					}
 					//非房主退出
 					else
 					{
 						PK pk=PKManager.getInstance().getPKBySqlID(roomSqlID);
-						PKUser user=pk.getPKUserByName(userTemp.name);
+						PKUser user=pk.getPKUserByRoleName(userTemp.roleName);
 						pk.channelGroup
-						.write(new LeavePKResultMessage2004(user.name,
+						.write(new LeavePKResultMessage2004(user.id,
 								user.Camp, user.seatID).pack());
 						PKManager.getInstance().getPKBySqlID(roomSqlID)
-						.removePKUser(user.name, user.Camp, user.seatID);
+						.removePKUser(user.id, user.Camp, user.seatID);
 					}
 					
 				

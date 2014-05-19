@@ -3,6 +3,7 @@ package client.msg.received;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import netty.MessageHandler;
@@ -22,23 +23,32 @@ import org.jboss.netty.channel.Channel;
 
 import pk.PK;
 import pk.PKManager;
+import user.PKUser;
 import user.UserManager;
 import client.msg.send.CreatePKResultMessage2002;
 
 public class CreatePKMessageReceived1002 extends SocketMessageReceived {
 
 	private static Logger logger = Logger.getLogger(CreatePKMessageReceived1002.class);
-	String area,map,title,des,name;
+	String area,map,title,des,id,roleName;
 	int point,type;
 	PK pk;
 	@Override
 	public void parse(ChannelBuffer buffer) {
 		try {
-			int namelength = buffer.readShort();
-			byte nameBytes[] = new byte[namelength];
-			buffer.readBytes(nameBytes);
-			name = new String(nameBytes);
-			name=URLDecoder.decode(name,"UTF-8");
+			int idlength = buffer.readShort();
+			byte idBytes[] = new byte[idlength];
+			buffer.readBytes(idBytes);
+			id = new String(idBytes);
+			id=URLDecoder.decode(id,"UTF-8");
+			
+			
+			int roleNamelength = buffer.readShort();
+			byte roleNameBytes[] = new byte[roleNamelength];
+			buffer.readBytes(roleNameBytes);
+			roleName = new String(roleNameBytes);
+			roleName=URLDecoder.decode(roleName,"UTF-8");
+			
 			int arealength = buffer.readShort();
 			byte areaBytes[] = new byte[arealength];
 			buffer.readBytes(areaBytes);
@@ -65,7 +75,7 @@ public class CreatePKMessageReceived1002 extends SocketMessageReceived {
 			point = buffer.readInt();
 			
 			int uid= buffer.readInt();
-			pk=new PK(name,title, area, map,des, type, point,uid);
+			pk=new PK(id,roleName,title, area, map,des, type, point,uid);
 			
 		
 		} catch (UnsupportedEncodingException e) {
@@ -85,7 +95,7 @@ public class CreatePKMessageReceived1002 extends SocketMessageReceived {
 		CloseableHttpClient httpClient = HttpClients.createDefault();
 		HttpPost httpPost = new HttpPost(
 				
-				"http://www.woowgo.com/yxlm/member/fight_add.php");
+				"http://www.hexcm.com/yxlm/member/fight_add.php");
 
 		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
 		nvps.add(new BasicNameValuePair("action", "dopost"));
@@ -105,7 +115,7 @@ public class CreatePKMessageReceived1002 extends SocketMessageReceived {
 				pk.sql_id=Long.parseLong(EntityUtils.toString(httppHttpResponse2
 						.getEntity()));
 				PKManager.getInstance().put(pk.sql_id, pk);
-				UserManager.getInstance().getUserByName(name).roomSqlID=pk.sql_id;
+				UserManager.getInstance().getUserByID(id).roomSqlID=pk.sql_id;
 				PKManager.getInstance().getPKBySqlID(pk.sql_id).channelGroup.add(channel);
 				PKManager.getInstance().getPKBySqlID(pk.sql_id).channelHost=channel;
 				MessageHandler.channelGroup.write(new CreatePKResultMessage2002(pk,0).pack());

@@ -16,50 +16,58 @@ public class JoinPKMessageReceived1003 extends SocketMessageReceived {
 
 	long sql_id;
 	int camp;
-	String name;
-	int  type;
+	String id, roleName;
+	int type;
 	int uid;
+
 	@Override
 	public void parse(ChannelBuffer buffer) {
 		sql_id = buffer.readLong();// 数据库ID
-		 camp = buffer.readShort();// 阵营 1发起 2应战
-		 
-		 
-		 
-		int namelength = buffer.readShort();
-		byte nameBytes[] = new byte[namelength];
-		buffer.readBytes(nameBytes);
+		camp = buffer.readShort();// 阵营 1发起 2应战
 		try {
-			name = new String(nameBytes, "utf-8");
-			name=URLDecoder.decode(name,"UTF-8");
-		} catch (UnsupportedEncodingException e) {
+			int idlength = buffer.readShort();
+			byte idBytes[] = new byte[idlength];
+			buffer.readBytes(idBytes);
+			id = new String(idBytes, "utf-8");
+			id = URLDecoder.decode(id, "UTF-8");
+			
+			int roleNamelength = buffer.readShort();
+			byte roleNameBytes[] = new byte[roleNamelength];
+			buffer.readBytes(roleNameBytes);
+			roleName = new String(roleNameBytes, "utf-8");
+			roleName = URLDecoder.decode(roleName, "UTF-8");
+		}
+
+		catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		uid=buffer.readInt();
-		
+		uid = buffer.readInt();
+
 	}
 
 	@Override
 	public void logicHandle(ChannelBuffer buffer, Channel channel) {
-		
-		type=PKManager.getInstance().getPKBySqlID(sql_id).type;
-		PK pk=PKManager.getInstance().getPKBySqlID(sql_id);
-		if((camp==1&&pk.faqiSeatCount==pk.type)||(camp==2&&pk.yingzhanSeatCount==pk.type))//加入方 人数已满,返回
+
+		type = PKManager.getInstance().getPKBySqlID(sql_id).type;
+		PK pk = PKManager.getInstance().getPKBySqlID(sql_id);
+		if ((camp == 1 && pk.faqiSeatCount == pk.type)
+				|| (camp == 2 && pk.yingzhanSeatCount == pk.type))// 加入方 人数已满,返回
 		{
-			channel.write(new JoinPKResultMessage2003(name,camp,-1,pk.userMap,type,1,pk.title,pk.area).pack());
+			channel.write(new JoinPKResultMessage2003(id,roleName, camp, -1, pk.userMap,
+					type, 1, pk.title, pk.area).pack());
 			return;
 		}
-		PKManager.getInstance().getPKBySqlID(sql_id).addPKUser(name, camp,uid);
-		UserManager.getInstance().getUserByName(name).roomSqlID=pk.sql_id;
-		
+		PKManager.getInstance().getPKBySqlID(sql_id).addPKUser(roleName, camp, uid);
+		UserManager.getInstance().getUserByID(id).roomSqlID = pk.sql_id;
+
 		pk.channelGroup.add(channel);
-		int seatID=camp==1?pk.faqiSeatCount-1:pk.yingzhanSeatCount-1;
-		pk.channelGroup.write(new JoinPKResultMessage2003(name,camp,seatID,pk.userMap,type,0,pk.title,pk.area).pack());
-//		System.out.println("pk.count:"+pk.count+",pk.type*2:"+pk.type*2);
-		if(pk.faqiSeatCount==pk.type&&pk.yingzhanSeatCount==pk.type)
-		{
-			pk.channelHost
-			.write(new CanStartGamePKMessage2005().pack());
+		int seatID = camp == 1 ? pk.faqiSeatCount - 1
+				: pk.yingzhanSeatCount - 1;
+		pk.channelGroup.write(new JoinPKResultMessage2003(id,roleName, camp, seatID,
+				pk.userMap, type, 0, pk.title, pk.area).pack());
+		// System.out.println("pk.count:"+pk.count+",pk.type*2:"+pk.type*2);
+		if (pk.faqiSeatCount == pk.type && pk.yingzhanSeatCount == pk.type) {
+			pk.channelHost.write(new CanStartGamePKMessage2005().pack());
 		}
 	}
 }

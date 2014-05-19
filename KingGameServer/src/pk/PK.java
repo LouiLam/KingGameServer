@@ -10,7 +10,8 @@ import user.PKUser;
 
 public class PK {
 
-	public String name;// 发起挑战的房主
+	public String id;// 发起挑战的房主id
+	public String roleName;// 发起挑战的游戏角色名
 	public String title;// 挑战标题
 	public String area;// 挑战区
 	public String map;// 挑战地图
@@ -26,39 +27,40 @@ public class PK {
 	public ChannelGroup channelGroup = new DefaultChannelGroup();// 挑战中玩家通道
 	public Channel channelHost;// 房主玩家通道
 	public HashMap<String,PKUser > userMap=new HashMap<String,PKUser >();
-	public PK(String name, String title, String area, String map, String des,int type,
+	public PK(String id,String roleName, String title, String area, String map, String des,int type,
 			int point,int hostUid) {
 		super();
-		this.name = name;
+		this.id = id;
+		this.roleName = roleName;
 		this.title = title;
 		this.area = area;
 		this.map = map;
 		this.des = des;
 		this.type = type;
 		this.point = point;
-		userMap.put(name,new PKUser(name, 1, faqiSeatCount,hostUid));
+		userMap.put(roleName,new PKUser(roleName, 1, faqiSeatCount,hostUid));
 		faqiSeatCount++;
 		count++;
 	}
-	public PKUser getPKUserByName(String name)
+	public PKUser getPKUserByRoleName(String roleName)
 	{
-		return userMap.get(name);
+		return userMap.get(roleName);
 	}
-	public void addPKUser(String name, int camp,int uid) {
+	public void addPKUser(String roleName, int camp,int uid) {
 		if (camp == 1) {
-			userMap.put(name, new PKUser(name, camp, faqiSeatCount,uid));
+			userMap.put(roleName, new PKUser(roleName, camp, faqiSeatCount,uid));
 			faqiSeatCount++;
 			
 		} else {
-			userMap.put(name, new PKUser(name, camp, yingzhanSeatCount,uid));
+			userMap.put(roleName, new PKUser(roleName, camp, yingzhanSeatCount,uid));
 			yingzhanSeatCount++;
 		}
 		count++;
 	}
 
-	public void removePKUser(String name, int camp, int seatID) {
+	public void removePKUser(String roleName, int camp, int seatID) {
 		count--;
-		userMap.remove(name);
+		userMap.remove(roleName);
 		if (camp == 1) {
 			faqiSeatCount--;
 
@@ -69,7 +71,7 @@ public class PK {
 
 	@Override
 	public String toString() {
-		return "房主:" + name + "----标题:" + title + "---挑战区:" + area + "--挑战地图:"
+		return "房主id:" + id+"---游戏角色名"+roleName + "----标题:" + title + "---挑战区:" + area + "--挑战地图:"
 				+ map + "--游戏对战人数类型" + type + "---挑战点数" + point;
 	}
 

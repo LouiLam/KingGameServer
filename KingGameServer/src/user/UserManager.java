@@ -15,10 +15,10 @@ public class UserManager {
 	private int maxUserNum;
 	private static UserManager myself;
 	private Map<Channel, PKUser> channelUserMap;
-	private Map<String, PKUser> nameUserMap;
+	private Map<String, PKUser> idUserMap;
 	private UserManager(){
 		channelUserMap = new ConcurrentHashMap<Channel, PKUser>();
-		nameUserMap=new ConcurrentHashMap<String ,PKUser>();
+		idUserMap=new ConcurrentHashMap<String ,PKUser>();
 	}
 	
 	public static UserManager getInstance(){
@@ -41,9 +41,9 @@ public class UserManager {
 	}
 	
 
-	public void addUser(Channel channel, PKUser user,String name) {
+	public void addUser(Channel channel, PKUser user,String id) {
 		channelUserMap.put(channel, user);
-		nameUserMap.put(name, user);
+		idUserMap.put(id, user);
 	}
 	
 	public PKUser getUserByChannel(Channel channel) {
@@ -58,8 +58,8 @@ public class UserManager {
 //		}
 	}
 
-	public PKUser getUserByName(String name) {
-		return nameUserMap.get(name);
+	public PKUser getUserByID(String id) {
+		return idUserMap.get(id);
 		
 	}
 }

@@ -20,7 +20,7 @@ import client.msg.send.RoomPKMessage2001;
 public class LoginMessage1001 extends SocketMessageReceived{
 
 	private static Logger logger = Logger.getLogger(LoginMessage1001.class);
-	private String name;
+	private String id;
 	private byte roomId;
 	
 	@Override
@@ -51,8 +51,8 @@ public class LoginMessage1001 extends SocketMessageReceived{
 //		}
 //		long uid = (Long) userSessionKeyMap.get("uid");
 //		Map userInfoMap = (Map) LoginDao.selectUserInfoByUid(uid).get(0);
-		PKUser user = new PKUser(name);
-		UserManager.getInstance().addUser(channel, user,name);
+		PKUser user = new PKUser(id);
+		UserManager.getInstance().addUser(channel, user,id);
 //		Room room = RoomManager.getInstance().getRoomById(roomId);
 //		//房间不存在
 //		if(room == null){
@@ -88,15 +88,15 @@ public class LoginMessage1001 extends SocketMessageReceived{
 		int Length = buffer.readShort();
 		byte[] idBytes = new byte[Length];
 		buffer.readBytes(idBytes);
-		name = new String(idBytes);
+		id = new String(idBytes);
 		try {
-			name=URLDecoder.decode(name,"UTF-8");
+			id=URLDecoder.decode(id,"UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 				
-		logger.info("name="+name);
+		logger.info("name="+id);
 //		byte sessionKeyLength = buffer.readByte();
 //		//sessionKey
 //		byte[] sessionKeyBytes = new byte[sessionKeyLength];

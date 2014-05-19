@@ -20,8 +20,10 @@ public class RoomPKMessage2001 extends SocketMessageToSend {
 		ChannelBuffer cb = ChannelBuffers.dynamicBuffer();
 		cb.writeShort(2001);
 		try {
-			cb.writeShort(pk.name.getBytes().length);
-			cb.writeBytes(pk.name.getBytes("utf-8"));
+			cb.writeShort(pk.id.getBytes().length);
+			cb.writeBytes(pk.id.getBytes("utf-8"));
+			cb.writeShort(pk.roleName.getBytes().length);
+			cb.writeBytes(pk.roleName.getBytes("utf-8"));
 			cb.writeShort(pk.area.getBytes().length);
 			cb.writeBytes(pk.area.getBytes("utf-8"));
 			cb.writeShort(pk.map.getBytes().length);

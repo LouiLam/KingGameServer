@@ -14,12 +14,12 @@ public class NormalLeavePKResultMessage2011 extends SocketMessageToSend {
 
 	int camp;
 	int seatID;
-	String name;
+	String roleName;
 
-	public NormalLeavePKResultMessage2011(String name, int camp, int seatID) {
+	public NormalLeavePKResultMessage2011(String roleName, int camp, int seatID) {
 		this.seatID = seatID;
 		this.camp = camp;
-		this.name = name;
+		this.roleName = roleName;
 	}
 
 	@Override
@@ -28,9 +28,9 @@ public class NormalLeavePKResultMessage2011 extends SocketMessageToSend {
 		cb.writeShort(2011);
 		cb.writeShort(camp);
 		cb.writeShort(seatID);
-		cb.writeShort(name.getBytes().length);
+		cb.writeShort(roleName.getBytes().length);
 		try {
-			cb.writeBytes(name.getBytes("utf-8"));
+			cb.writeBytes(roleName.getBytes("utf-8"));
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
