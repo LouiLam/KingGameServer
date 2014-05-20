@@ -14,6 +14,7 @@ import pk.PKManager;
 import user.PKUser;
 import user.UserManager;
 import client.msg.send.LoginReturnMessage;
+import client.msg.send.RoomPKBeginMessage2013;
 import client.msg.send.RoomPKFinishMessage2008;
 import client.msg.send.RoomPKMessage2001;
 
@@ -72,6 +73,7 @@ public class LoginMessage1001 extends SocketMessageReceived{
 		logger.info("玩家登陆成功"  + ", ip=" + channel.getRemoteAddress());
 		//如果有PK房间列表，就发送给推送房间信息给登录用户
 		
+		channel.write(new RoomPKBeginMessage2013().pack());
 		 HashMap<Long,PK> map=	PKManager.getInstance().getPKMap();
 		Iterator<Long> it = map.keySet().iterator();
 		while(it.hasNext()){

@@ -10,7 +10,6 @@ import org.apache.log4j.Logger;
 import org.dom4j.DocumentException;
 import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import pk.PKManager;

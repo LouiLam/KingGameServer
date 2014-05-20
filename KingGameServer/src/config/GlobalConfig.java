@@ -1,7 +1,6 @@
 package config;
 
 
-import org.dom4j.DocumentException;
 
 public class GlobalConfig extends AbstractConfig{
 

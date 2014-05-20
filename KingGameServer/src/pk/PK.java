@@ -38,29 +38,29 @@ public class PK {
 		this.des = des;
 		this.type = type;
 		this.point = point;
-		userMap.put(roleName,new PKUser(roleName, 1, faqiSeatCount,hostUid));
+		userMap.put(id,new PKUser(roleName, 1, faqiSeatCount,hostUid));
 		faqiSeatCount++;
 		count++;
 	}
-	public PKUser getPKUserByRoleName(String roleName)
+	public PKUser getPKUserByRoleName(String id)
 	{
-		return userMap.get(roleName);
+		return userMap.get(id);
 	}
-	public void addPKUser(String roleName, int camp,int uid) {
+	public void addPKUser(String id,String roleName, int camp,int uid) {
 		if (camp == 1) {
-			userMap.put(roleName, new PKUser(roleName, camp, faqiSeatCount,uid));
+			userMap.put(id, new PKUser(roleName, camp, faqiSeatCount,uid));
 			faqiSeatCount++;
 			
 		} else {
-			userMap.put(roleName, new PKUser(roleName, camp, yingzhanSeatCount,uid));
+			userMap.put(id, new PKUser(roleName, camp, yingzhanSeatCount,uid));
 			yingzhanSeatCount++;
 		}
 		count++;
 	}
 
-	public void removePKUser(String roleName, int camp, int seatID) {
+	public void removePKUser(String id, int camp, int seatID) {
 		count--;
-		userMap.remove(roleName);
+		userMap.remove(id);
 		if (camp == 1) {
 			faqiSeatCount--;
 

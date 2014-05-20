@@ -2,7 +2,6 @@ package database.client;
 
 import org.apache.log4j.PropertyConfigurator;
 
-
 import config.GlobalConfig;
 
 public class DataBaseTestMain {

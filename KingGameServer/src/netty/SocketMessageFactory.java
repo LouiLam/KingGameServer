@@ -7,7 +7,6 @@ import java.util.Properties;
 import org.dom4j.DocumentException;
 
 import client.msg.received.SocketMessageReceived;
-
 import config.GlobalConfig;
 
 public class SocketMessageFactory {

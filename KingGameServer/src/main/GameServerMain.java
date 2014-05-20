@@ -4,12 +4,9 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.dom4j.DocumentException;
 
-import pk.PKManager;
-
-import center_server.CenterServerClient;
+import server.GameServer;
 import config.GlobalConfig;
 import database.client.IbatisClient;
-import server.GameServer;
 
 public class GameServerMain {
 

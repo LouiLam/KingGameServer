@@ -12,19 +12,19 @@ import org.jboss.netty.buffer.ChannelBuffers;
  */
 public class HostLeavePKResultMessage2009 extends SocketMessageToSend {
 
-	String name;
+	String id;
 
-	public HostLeavePKResultMessage2009(String name) {
-		this.name = name;
+	public HostLeavePKResultMessage2009(String id) {
+		this.id = id;
 	}
 
 	@Override
 	public ChannelBuffer pack() {
 		ChannelBuffer cb = ChannelBuffers.dynamicBuffer();
 		cb.writeShort(2009);
-		cb.writeShort(name.getBytes().length);
+		cb.writeShort(id.getBytes().length);
 		try {
-			cb.writeBytes(name.getBytes("utf-8"));
+			cb.writeBytes(id.getBytes("utf-8"));
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

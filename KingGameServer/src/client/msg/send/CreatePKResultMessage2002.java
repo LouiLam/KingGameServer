@@ -41,6 +41,8 @@ public class CreatePKResultMessage2002 extends SocketMessageToSend {
 			cb.writeBytes(pk.des.getBytes("utf-8"));
 			cb.writeInt(pk.type);
 			cb.writeInt(pk.point);
+			cb.writeInt(pk.faqiSeatCount);
+			cb.writeInt(pk.yingzhanSeatCount);
 			cb.writeLong(pk.sql_id);
 			
 		} catch (UnsupportedEncodingException e) {

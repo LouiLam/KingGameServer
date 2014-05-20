@@ -15,8 +15,11 @@ public class JoinPKResultMessage2003 extends SocketMessageToSend {
 	int seatID;
 	String id, roleName;
 	HashMap<String, PKUser> userMap;
-	int type;
+	int type,point;
+	int faqiSeatCount;
+	int yingzhanSeatCount;
 	String title, area;
+	long sql_id;
 	/**
 	 * 0表示成功，否则表示失败
 	 */
@@ -24,7 +27,7 @@ public class JoinPKResultMessage2003 extends SocketMessageToSend {
 
 	public JoinPKResultMessage2003(String id, String roleName, int camp,
 			int seatID, HashMap<String, PKUser> userMap, int type, int status,
-			String title, String area) {
+			String title, String area,int point,int faqiSeatCount,int yingzhanSeatCount,long sql_id) {
 		this.seatID = seatID;
 		this.camp = camp;
 		this.id = id;
@@ -34,16 +37,22 @@ public class JoinPKResultMessage2003 extends SocketMessageToSend {
 		this.status = status;
 		this.title = title;
 		this.area = area;
+		this.point=point;
+		this.faqiSeatCount=faqiSeatCount;
+		this.yingzhanSeatCount=yingzhanSeatCount;
+		this.sql_id=sql_id;
 	}
 
 	@Override
 	public ChannelBuffer pack() {
 		ChannelBuffer cb = ChannelBuffers.dynamicBuffer();
 		cb.writeShort(2003);
-		// cb.writeShort(camp);
-		// cb.writeShort(seatID);
 		cb.writeInt(status);
 		cb.writeInt(type);
+		cb.writeInt(point);
+		cb.writeInt(faqiSeatCount);
+		cb.writeInt(yingzhanSeatCount);
+		cb.writeLong(sql_id);
 		try {
 			cb.writeShort(id.getBytes().length);
 			cb.writeBytes(id.getBytes("utf-8"));

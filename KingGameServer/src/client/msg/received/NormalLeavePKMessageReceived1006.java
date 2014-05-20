@@ -26,10 +26,10 @@ public class NormalLeavePKMessageReceived1006 extends SocketMessageReceived {
 		long roomIndex=usertemp.roomSqlID;
 		usertemp.roomSqlID=-1;
 		PK pk=PKManager.getInstance().getPKBySqlID(roomIndex);
-		PKUser user=pk.getPKUserByRoleName(usertemp.roleName);
+		PKUser user=pk.getPKUserByRoleName(usertemp.id);
 		pk.channelGroup
 		.write(new NormalLeavePKResultMessage2011(user.roleName,
-				user.Camp, user.seatID).pack());
+				user.Camp, user.seatID,pk.sql_id).pack());
 		pk.removePKUser(user.id, user.Camp, user.seatID);
 		if(channel!=pk.channelHost)
 		{
@@ -38,10 +38,10 @@ public class NormalLeavePKMessageReceived1006 extends SocketMessageReceived {
 		else
 		{
 			PKManager.getInstance().getPKBySqlID(roomIndex).channelGroup
-			.write(new HostLeavePKResultMessage2009(usertemp.roleName).pack());
+			.write(new HostLeavePKResultMessage2009(usertemp.id).pack());
 			PKManager.getInstance().removePK(roomIndex);
 		}
-	
+		PKManager.getInstance().refreshPK();
 	}
 	
 //	public static void main(String[] args) {

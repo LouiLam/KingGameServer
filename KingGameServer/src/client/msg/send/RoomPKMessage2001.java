@@ -34,6 +34,8 @@ public class RoomPKMessage2001 extends SocketMessageToSend {
 			cb.writeBytes(pk.des.getBytes("utf-8"));
 			cb.writeInt(pk.type);
 			cb.writeInt(pk.point);
+			cb.writeInt(pk.faqiSeatCount);
+			cb.writeInt(pk.yingzhanSeatCount);
 			cb.writeLong(pk.sql_id);
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block

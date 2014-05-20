@@ -45,7 +45,11 @@ public class UserManager {
 		channelUserMap.put(channel, user);
 		idUserMap.put(id, user);
 	}
-	
+	/**
+	 * 通过此方法获得的user只有id 其他属性都是默认值
+	 * @param channel
+	 * @return
+	 */
 	public PKUser getUserByChannel(Channel channel) {
 		return channelUserMap.get(channel);
 	}

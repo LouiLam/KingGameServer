@@ -19,7 +19,6 @@ import org.jboss.netty.channel.Channel;
 import pk.PK;
 import pk.PKManager;
 import user.PKUser;
-import client.msg.send.RoomPKMessage2001;
 import client.msg.send.StartGamePKResultMessage2006;
 
 public class StartGamePKMessageReceived1004 extends SocketMessageReceived {
@@ -57,12 +56,12 @@ public class StartGamePKMessageReceived1004 extends SocketMessageReceived {
 			}
 	
 		try {
-			httpPostFightStart(channel);
+			httpGetFightStart(channel);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	public  void  httpPostFightStart(Channel channel) throws Exception {
+	public  void  httpGetFightStart(Channel channel) throws Exception {
 		String url="http://www.hexcm.com/yxlm/member/fight_add.php?";
 		String gtEncode = URLEncoder.encode(gt, "utf-8" ); 
 		String ytEncode = URLEncoder.encode(yt, "utf-8" ); 

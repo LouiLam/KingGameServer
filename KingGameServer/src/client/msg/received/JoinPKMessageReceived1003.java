@@ -2,6 +2,10 @@ package client.msg.received;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.HashMap;
+import java.util.Iterator;
+
+import netty.MessageHandler;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
@@ -11,6 +15,9 @@ import pk.PKManager;
 import user.UserManager;
 import client.msg.send.CanStartGamePKMessage2005;
 import client.msg.send.JoinPKResultMessage2003;
+import client.msg.send.RoomPKBeginMessage2013;
+import client.msg.send.RoomPKFinishMessage2008;
+import client.msg.send.RoomPKMessage2001;
 
 public class JoinPKMessageReceived1003 extends SocketMessageReceived {
 
@@ -54,17 +61,18 @@ public class JoinPKMessageReceived1003 extends SocketMessageReceived {
 				|| (camp == 2 && pk.yingzhanSeatCount == pk.type))// 加入方 人数已满,返回
 		{
 			channel.write(new JoinPKResultMessage2003(id,roleName, camp, -1, pk.userMap,
-					type, 1, pk.title, pk.area).pack());
+					type, 1, pk.title, pk.area,pk.point,pk.faqiSeatCount,pk.yingzhanSeatCount,pk.sql_id).pack());
 			return;
 		}
-		PKManager.getInstance().getPKBySqlID(sql_id).addPKUser(roleName, camp, uid);
+		PKManager.getInstance().getPKBySqlID(sql_id).addPKUser(id,roleName, camp, uid);
 		UserManager.getInstance().getUserByID(id).roomSqlID = pk.sql_id;
 
 		pk.channelGroup.add(channel);
 		int seatID = camp == 1 ? pk.faqiSeatCount - 1
 				: pk.yingzhanSeatCount - 1;
 		pk.channelGroup.write(new JoinPKResultMessage2003(id,roleName, camp, seatID,
-				pk.userMap, type, 0, pk.title, pk.area).pack());
+				pk.userMap, type, 0, pk.title, pk.area,pk.point,pk.faqiSeatCount,pk.yingzhanSeatCount,pk.sql_id).pack());
+		PKManager.getInstance().refreshPK();
 		// System.out.println("pk.count:"+pk.count+",pk.type*2:"+pk.type*2);
 		if (pk.faqiSeatCount == pk.type && pk.yingzhanSeatCount == pk.type) {
 			pk.channelHost.write(new CanStartGamePKMessage2005().pack());

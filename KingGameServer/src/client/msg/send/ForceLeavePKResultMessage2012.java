@@ -6,31 +6,33 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 
 /**
- * 离开房间
+ * 客户端时间没到的情况下 强制离开房间
  * @author Administrator
  *
  */
-public class LeavePKResultMessage2004 extends SocketMessageToSend {
+public class ForceLeavePKResultMessage2012 extends SocketMessageToSend {
 
 	int camp;
 	int seatID;
-	String name;
-
-	public LeavePKResultMessage2004(String name, int camp, int seatID) {
+	String roleName;
+	long sql_id;
+	public ForceLeavePKResultMessage2012(String roleName, int camp, int seatID,long sql_id) {
 		this.seatID = seatID;
 		this.camp = camp;
-		this.name = name;
+		this.roleName = roleName;
+		this.sql_id=sql_id;
 	}
 
 	@Override
 	public ChannelBuffer pack() {
 		ChannelBuffer cb = ChannelBuffers.dynamicBuffer();
-		cb.writeShort(2004);
+		cb.writeShort(2012);
 		cb.writeShort(camp);
 		cb.writeShort(seatID);
-		cb.writeShort(name.getBytes().length);
+		cb.writeLong(sql_id);
+		cb.writeShort(roleName.getBytes().length);
 		try {
-			cb.writeBytes(name.getBytes("utf-8"));
+			cb.writeBytes(roleName.getBytes("utf-8"));
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

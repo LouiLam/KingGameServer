@@ -3,7 +3,6 @@ package client.msg.received;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import netty.MessageHandler;
@@ -23,7 +22,6 @@ import org.jboss.netty.channel.Channel;
 
 import pk.PK;
 import pk.PKManager;
-import user.PKUser;
 import user.UserManager;
 import client.msg.send.CreatePKResultMessage2002;
 

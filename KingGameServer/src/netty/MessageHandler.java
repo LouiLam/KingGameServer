@@ -2,6 +2,8 @@ package netty;
 
 import java.io.IOException;
 import java.net.SocketAddress;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
@@ -19,8 +21,11 @@ import pk.PKManager;
 import user.PKUser;
 import user.UserManager;
 import client.msg.received.SocketMessageReceived;
+import client.msg.send.CreatePKResultMessage2002;
 import client.msg.send.HostLeavePKResultMessage2009;
-import client.msg.send.LeavePKResultMessage2004;
+import client.msg.send.CrashLeavePKResultMessage2004;
+import client.msg.send.RoomPKFinishMessage2008;
+import client.msg.send.RoomPKMessage2001;
 
 public class MessageHandler extends SimpleChannelHandler {
 
@@ -59,17 +64,19 @@ public class MessageHandler extends SimpleChannelHandler {
 						PKManager.getInstance().getPKBySqlID(roomSqlID).channelGroup
 						.write(new HostLeavePKResultMessage2009(userTemp.id).pack());
 						PKManager.getInstance().removePK(roomSqlID);
+						
 					}
 					//非房主退出
 					else
 					{
 						PK pk=PKManager.getInstance().getPKBySqlID(roomSqlID);
-						PKUser user=pk.getPKUserByRoleName(userTemp.roleName);
+						PKUser user=pk.getPKUserByRoleName(userTemp.id);
 						pk.channelGroup
-						.write(new LeavePKResultMessage2004(user.id,
-								user.Camp, user.seatID).pack());
+						.write(new CrashLeavePKResultMessage2004(user.id,
+								user.Camp, user.seatID,pk.sql_id).pack());
 						PKManager.getInstance().getPKBySqlID(roomSqlID)
 						.removePKUser(user.id, user.Camp, user.seatID);
+						PKManager.getInstance().refreshPK();
 					}
 					
 				

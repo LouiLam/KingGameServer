@@ -6,34 +6,35 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 
 /**
- * 正常离开房间
+ * 客户端崩溃，或者强行关闭程序离开房间
  * @author Administrator
  *
  */
-public class NormalLeavePKResultMessage2011 extends SocketMessageToSend {
+public class CrashLeavePKResultMessage2004 extends SocketMessageToSend {
 
 	int camp;
 	int seatID;
-	String roleName;
+	String name;
 	long sql_id;
-	public NormalLeavePKResultMessage2011(String roleName, int camp, int seatID,long sql_id) {
+	public CrashLeavePKResultMessage2004(String name, int camp, int seatID,long sql_id) {
 		this.seatID = seatID;
 		this.camp = camp;
-		this.roleName = roleName;
+		this.name = name;
 		this.sql_id=sql_id;
 	}
 
 	@Override
 	public ChannelBuffer pack() {
 		ChannelBuffer cb = ChannelBuffers.dynamicBuffer();
-		cb.writeShort(2011);
+		cb.writeShort(2004);
 		cb.writeShort(camp);
 		cb.writeShort(seatID);
 		cb.writeLong(sql_id);
-		cb.writeShort(roleName.getBytes().length);
+		cb.writeShort(name.getBytes().length);
 		try {
-			cb.writeBytes(roleName.getBytes("utf-8"));
+			cb.writeBytes(name.getBytes("utf-8"));
 		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
