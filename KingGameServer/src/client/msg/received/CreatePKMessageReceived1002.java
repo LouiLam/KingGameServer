@@ -28,7 +28,7 @@ import client.msg.send.CreatePKResultMessage2002;
 public class CreatePKMessageReceived1002 extends SocketMessageReceived {
 
 	private static Logger logger = Logger.getLogger(CreatePKMessageReceived1002.class);
-	String area,map,title,des,id,roleName;
+	String area,map,title,des,id,roleName,password;
 	int point,type;
 	PK pk;
 	@Override
@@ -67,13 +67,20 @@ public class CreatePKMessageReceived1002 extends SocketMessageReceived {
 				buffer.readBytes(desBytes);
 				 des = new String(titleBytes, "utf-8");
 				 des=URLDecoder.decode(des,"UTF-8");
+				 
+					int pwdlength = buffer.readShort();
+					byte pwdBytes[] = new byte[pwdlength];
+					buffer.readBytes(pwdBytes);
+					 password = new String(pwdBytes, "utf-8");
+					 password=URLDecoder.decode(password,"UTF-8");
+					 
 			// 几V几
 			type = buffer.readInt();
 			// 点数
 			point = buffer.readInt();
 			
 			int uid= buffer.readInt();
-			pk=new PK(id,roleName,title, area, map,des, type, point,uid);
+			pk=new PK(id,roleName,title, area, map,des, type, point,uid,password);
 			
 		
 		} catch (UnsupportedEncodingException e) {

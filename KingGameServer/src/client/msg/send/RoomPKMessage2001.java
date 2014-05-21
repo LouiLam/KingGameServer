@@ -32,6 +32,8 @@ public class RoomPKMessage2001 extends SocketMessageToSend {
 			cb.writeBytes(pk.title.getBytes("utf-8"));
 			cb.writeShort(pk.des.getBytes().length);
 			cb.writeBytes(pk.des.getBytes("utf-8"));
+			cb.writeShort(pk.password.getBytes().length);
+			cb.writeBytes(pk.password.getBytes("utf-8"));
 			cb.writeInt(pk.type);
 			cb.writeInt(pk.point);
 			cb.writeInt(pk.faqiSeatCount);

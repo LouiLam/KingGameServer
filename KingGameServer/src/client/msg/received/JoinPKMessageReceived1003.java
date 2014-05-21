@@ -23,7 +23,7 @@ public class JoinPKMessageReceived1003 extends SocketMessageReceived {
 
 	long sql_id;
 	int camp;
-	String id, roleName;
+	String id, roleName,password;
 	int type;
 	int uid;
 
@@ -43,6 +43,13 @@ public class JoinPKMessageReceived1003 extends SocketMessageReceived {
 			buffer.readBytes(roleNameBytes);
 			roleName = new String(roleNameBytes, "utf-8");
 			roleName = URLDecoder.decode(roleName, "UTF-8");
+			
+			int pwdlength = buffer.readShort();
+			byte  pwdBytes[] = new byte[pwdlength];
+			buffer.readBytes(pwdBytes);
+			password = new String(pwdBytes, "utf-8");
+			password = URLDecoder.decode(password, "UTF-8");
+			
 		}
 
 		catch (UnsupportedEncodingException e) {
@@ -61,21 +68,31 @@ public class JoinPKMessageReceived1003 extends SocketMessageReceived {
 				|| (camp == 2 && pk.yingzhanSeatCount == pk.type))// 加入方 人数已满,返回
 		{
 			channel.write(new JoinPKResultMessage2003(id,roleName, camp, -1, pk.userMap,
-					type, 1, pk.title, pk.area,pk.point,pk.faqiSeatCount,pk.yingzhanSeatCount,pk.sql_id).pack());
+					type, -1, pk.title, pk.area,pk.point,pk.faqiSeatCount,pk.yingzhanSeatCount,pk.sql_id).pack());
 			return;
 		}
-		PKManager.getInstance().getPKBySqlID(sql_id).addPKUser(id,roleName, camp, uid);
-		UserManager.getInstance().getUserByID(id).roomSqlID = pk.sql_id;
-
-		pk.channelGroup.add(channel);
 		int seatID = camp == 1 ? pk.faqiSeatCount - 1
 				: pk.yingzhanSeatCount - 1;
-		pk.channelGroup.write(new JoinPKResultMessage2003(id,roleName, camp, seatID,
-				pk.userMap, type, 0, pk.title, pk.area,pk.point,pk.faqiSeatCount,pk.yingzhanSeatCount,pk.sql_id).pack());
-		PKManager.getInstance().refreshPK();
-		// System.out.println("pk.count:"+pk.count+",pk.type*2:"+pk.type*2);
-		if (pk.faqiSeatCount == pk.type && pk.yingzhanSeatCount == pk.type) {
-			pk.channelHost.write(new CanStartGamePKMessage2005().pack());
+		if(password.equals("")||pk.password.equals(password))//没有密码
+		{
+			PKManager.getInstance().getPKBySqlID(sql_id).addPKUser(id,roleName, camp, uid);
+			UserManager.getInstance().getUserByID(id).roomSqlID = pk.sql_id;
+
+			pk.channelGroup.add(channel);
+			
+			pk.channelGroup.write(new JoinPKResultMessage2003(id,roleName, camp, seatID,
+					pk.userMap, type, 0, pk.title, pk.area,pk.point,pk.faqiSeatCount,pk.yingzhanSeatCount,pk.sql_id).pack());
+			PKManager.getInstance().refreshPK();
+			// System.out.println("pk.count:"+pk.count+",pk.type*2:"+pk.type*2);
+			if (pk.faqiSeatCount == pk.type && pk.yingzhanSeatCount == pk.type) {
+				pk.channelHost.write(new CanStartGamePKMessage2005().pack());
+			}
 		}
+		else  //密码错误
+		{
+			channel.write(new JoinPKResultMessage2003(id,roleName, camp, seatID,
+					pk.userMap, type, -2, pk.title, pk.area,pk.point,pk.faqiSeatCount,pk.yingzhanSeatCount,pk.sql_id).pack());
+		}
+		
 	}
 }

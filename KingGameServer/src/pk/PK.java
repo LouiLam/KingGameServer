@@ -17,7 +17,7 @@ public class PK {
 	public String map;// 挑战地图
 	public String des;// 挑战描述
 	public long sql_id;//挑战条目的数据库ID
-	
+	public String password="";//挑战密码
 	public int type;// 游戏对战人数类型
 	public int point;// 挑战点数
 //	public PKUser[] users = new PKUser[10];
@@ -28,7 +28,7 @@ public class PK {
 	public Channel channelHost;// 房主玩家通道
 	public HashMap<String,PKUser > userMap=new HashMap<String,PKUser >();
 	public PK(String id,String roleName, String title, String area, String map, String des,int type,
-			int point,int hostUid) {
+			int point,int hostUid,String password) {
 		super();
 		this.id = id;
 		this.roleName = roleName;
@@ -38,6 +38,7 @@ public class PK {
 		this.des = des;
 		this.type = type;
 		this.point = point;
+		this.password=password;
 		userMap.put(id,new PKUser(roleName, 1, faqiSeatCount,hostUid));
 		faqiSeatCount++;
 		count++;

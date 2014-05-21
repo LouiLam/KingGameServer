@@ -14,10 +14,10 @@ public class StartGamePKResultMessage2006 extends SocketMessageToSend {
 	 * 	0表示成功 否则失败
 	 */
 	int status;
-	String name;
-	public StartGamePKResultMessage2006(int status,String name) {
+	String id;
+	public StartGamePKResultMessage2006(int status,String id) {
 		this.status=status;
-		this.name=name;
+		this.id=id;
 	}
 
 	@Override
@@ -25,9 +25,9 @@ public class StartGamePKResultMessage2006 extends SocketMessageToSend {
 		ChannelBuffer cb = ChannelBuffers.dynamicBuffer();
 		cb.writeShort(2006);
 		cb.writeInt(status);
-		cb.writeShort(name.getBytes().length);
+		cb.writeShort(id.getBytes().length);
 		try {
-			cb.writeBytes(name.getBytes("utf-8"));
+			cb.writeBytes(id.getBytes("utf-8"));
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
