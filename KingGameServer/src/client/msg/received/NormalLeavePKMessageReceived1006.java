@@ -12,7 +12,7 @@ import client.msg.send.NoCanStartGamePKMessage2010;
 import client.msg.send.NormalLeavePKResultMessage2011;
 
 /**
- * 玩家正常主动离开挑战房间
+ * 非房主玩家正常离开房间
  */
 public class NormalLeavePKMessageReceived1006 extends SocketMessageReceived {
 	@Override

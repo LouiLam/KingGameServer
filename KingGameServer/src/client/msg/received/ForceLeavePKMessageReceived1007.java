@@ -19,7 +19,7 @@ import client.msg.send.ForceLeavePKResultMessage2012;
 import client.msg.send.HostLeavePKResultMessage2009;
 
 /**
- * 玩家强制离开挑战房间
+ * 玩家在倒计时内强制离开挑战房间
  */
 public class ForceLeavePKMessageReceived1007 extends SocketMessageReceived {
 	@Override

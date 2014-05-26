@@ -6,7 +6,7 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 
 /**
- * 房主离开房间，通知其他玩家异常情况
+ * 房主强制或正常或崩溃离开房间
  * @author Administrator
  *
  */

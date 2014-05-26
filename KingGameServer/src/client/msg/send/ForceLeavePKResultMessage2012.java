@@ -6,7 +6,7 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 
 /**
- * 客户端时间没到的情况下 强制离开房间
+ * 非房主客户端时间没到的情况下 强制离开房间
  * @author Administrator
  *
  */

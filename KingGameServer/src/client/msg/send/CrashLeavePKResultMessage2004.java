@@ -6,7 +6,7 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 
 /**
- * 客户端崩溃，或者强行关闭程序离开房间
+ * 非房主客户端崩溃，或者通过任务管理器关闭程序离开房间
  * @author Administrator
  *
  */

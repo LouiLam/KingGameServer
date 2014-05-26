@@ -60,7 +60,7 @@ public class MessageHandler extends SimpleChannelHandler {
 					//房主退出
 					if(PKManager.getInstance().getPKBySqlID(roomSqlID).channelHost==ctx.getChannel())
 					{
-						logger.info("房主退出，解散房间,通知其他玩家退出房间，并且处理其他玩家退出逻辑");
+						logger.info("房主异常退出，解散房间,通知其他玩家退出房间，并且处理其他玩家退出逻辑");
 						PKManager.getInstance().getPKBySqlID(roomSqlID).channelGroup
 						.write(new HostLeavePKResultMessage2009(userTemp.id).pack());
 						PKManager.getInstance().removePK(roomSqlID);
