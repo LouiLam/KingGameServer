@@ -14,6 +14,7 @@ import pk.PKManager;
 import user.PKUser;
 import user.UserManager;
 import client.msg.send.LoginReturnMessage;
+import client.msg.send.RepeatLoginErrorMessage2014;
 import client.msg.send.RoomPKBeginMessage2013;
 import client.msg.send.RoomPKFinishMessage2008;
 import client.msg.send.RoomPKMessage2001;
@@ -27,9 +28,10 @@ public class LoginMessage1001 extends SocketMessageReceived{
 	@Override
 	public void logicHandle(ChannelBuffer buffer, Channel channel) {
 		//检查该连接是否已登陆过
-		if(UserManager.getInstance().getUserByChannel(channel) != null){
-			logger.error("此会话已登陆过：" + ", ip === " + channel.getRemoteAddress());
-			return;
+		if(UserManager.getInstance().getChannelByID(id) != null){
+			logger.error(id+"此用户已登陆过：" + ", ip === " + channel.getRemoteAddress());
+			Channel	close_channel=UserManager.getInstance().getChannelByID(id);
+			close_channel.write(new RepeatLoginErrorMessage2014().pack());
 		}
 		//服务器人满 
 		if(UserManager.getInstance().isFull()){
@@ -70,7 +72,7 @@ public class LoginMessage1001 extends SocketMessageReceived{
 //			sendResult((byte)2, (short)4, channel);
 //			return;
 //		}
-		logger.info("玩家登陆成功"  + ", ip=" + channel.getRemoteAddress());
+		logger.info(id+"玩家登陆成功"  + ", ip=" + channel.getRemoteAddress());
 		//如果有PK房间列表，就发送给推送房间信息给登录用户
 		
 		channel.write(new RoomPKBeginMessage2013().pack());
@@ -98,7 +100,6 @@ public class LoginMessage1001 extends SocketMessageReceived{
 			e.printStackTrace();
 		}
 				
-		logger.info("name="+id);
 //		byte sessionKeyLength = buffer.readByte();
 //		//sessionKey
 //		byte[] sessionKeyBytes = new byte[sessionKeyLength];

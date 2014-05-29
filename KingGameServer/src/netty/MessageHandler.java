@@ -2,8 +2,6 @@ package netty;
 
 import java.io.IOException;
 import java.net.SocketAddress;
-import java.util.HashMap;
-import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
@@ -21,17 +19,13 @@ import pk.PKManager;
 import user.PKUser;
 import user.UserManager;
 import client.msg.received.SocketMessageReceived;
-import client.msg.send.CreatePKResultMessage2002;
-import client.msg.send.HostLeavePKResultMessage2009;
 import client.msg.send.CrashLeavePKResultMessage2004;
-import client.msg.send.RoomPKFinishMessage2008;
-import client.msg.send.RoomPKMessage2001;
+import client.msg.send.HostLeavePKResultMessage2009;
 
 public class MessageHandler extends SimpleChannelHandler {
 
 	private static Logger logger = Logger.getLogger(MessageHandler.class);
 	public static ChannelGroup channelGroup = new DefaultChannelGroup();
-
 	@Override
 	public void channelConnected(ChannelHandlerContext ctx, ChannelStateEvent e) {
 		Channel channel = e.getChannel();

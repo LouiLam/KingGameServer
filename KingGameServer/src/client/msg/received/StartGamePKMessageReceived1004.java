@@ -24,6 +24,7 @@ import client.msg.send.StartGamePKResultMessage2006;
 public class StartGamePKMessageReceived1004 extends SocketMessageReceived {
 	long sql_id;
 	String gt="",yt="";
+	String roleName;
 	@Override
 	public void parse(ChannelBuffer buffer) {
 		 sql_id=buffer.readLong();
@@ -53,6 +54,7 @@ public class StartGamePKMessageReceived1004 extends SocketMessageReceived {
 				//去掉最后一个|号
 				gt=gt.substring(0, gt.length()-1);
 				yt=yt.substring(0, yt.length()-1);
+				roleName=pk.roleName;
 			}
 	
 		try {
@@ -70,7 +72,7 @@ public class StartGamePKMessageReceived1004 extends SocketMessageReceived {
         System.out.println(url+uu);
         try {
             HttpGet httpGet = new HttpGet(url+uu);
-            PKHttpStringMgr.EndMap.put(sql_id, url+"action=stac&id="+sql_id+"&status=2&gt="+gtEncode+"&yt="+ytEncode);
+            PKHttpStringMgr.EndMap.put(sql_id, url+"action=stac&id="+sql_id+"&status=2&gt="+gtEncode+"&yt="+ytEncode+"&roleName="+roleName);
             CloseableHttpResponse response1 = httpclient.execute(httpGet);
             // The underlying HTTP connection is still held by the response object
             // to allow the response content to be streamed directly from the network socket.
