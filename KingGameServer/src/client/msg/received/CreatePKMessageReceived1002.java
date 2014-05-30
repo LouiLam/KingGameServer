@@ -19,11 +19,13 @@ import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
+import org.json.JSONObject;
 
 import pk.PK;
 import pk.PKManager;
 import user.UserManager;
 import client.msg.send.CreatePKResultMessage2002;
+import client.msg.send.RoleNameErrorMessage2015;
 
 public class CreatePKMessageReceived1002 extends SocketMessageReceived {
 
@@ -112,19 +114,38 @@ public class CreatePKMessageReceived1002 extends SocketMessageReceived {
 		nvps.add(new BasicNameValuePair("map",map));
 		nvps.add(new BasicNameValuePair("description",des));
 		nvps.add(new BasicNameValuePair("type",type+""));
+		nvps.add(new BasicNameValuePair("creator",roleName));
+		
 		try {
 			httpPost.setEntity(new UrlEncodedFormEntity(nvps,"utf-8"));
 			CloseableHttpResponse httppHttpResponse2 = httpClient
 					.execute(httpPost);
 			if (httppHttpResponse2.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-				pk.sql_id=Long.parseLong(EntityUtils.toString(httppHttpResponse2
-						.getEntity()));
+				String str=EntityUtils.toString(httppHttpResponse2
+						.getEntity());
+				System.out.println(str);
+				JSONObject obj=new JSONObject(str);
+//				status_creator(1：用户名正常  -1: 用户名未填写  -2：用户名不存在)
+//		          status_exe(1:正常  -1：创建失败)
+//			  	  roomid:房间号
+
+				
+			
+				int status_creator=obj.getInt("status_creator");
+				if(status_creator==-1||status_creator==-2)
+				{
+					channel.write(new RoleNameErrorMessage2015().pack());
+				}
+				else
+				{	
+				pk.sql_id=obj.getLong("roomid");
 				PKManager.getInstance().put(pk.sql_id, pk);
 				UserManager.getInstance().getUserByID(id).roomSqlID=pk.sql_id;
 				PKManager.getInstance().getPKBySqlID(pk.sql_id).channelGroup.add(channel);
 				PKManager.getInstance().getPKBySqlID(pk.sql_id).channelHost=channel;
 				MessageHandler.channelGroup.write(new CreatePKResultMessage2002(pk,0).pack());
-				System.out.println("房间创建成功"+pk.sql_id);
+				System.out.println("房间创建成功"+pk.sql_id);}
+				
 			}
 			else //创建房间失败
 			{

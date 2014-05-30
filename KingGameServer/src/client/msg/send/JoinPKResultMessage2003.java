@@ -50,6 +50,7 @@ public class JoinPKResultMessage2003 extends SocketMessageToSend {
 		cb.writeInt(status);
 		cb.writeInt(type);
 		cb.writeInt(point);
+		cb.writeInt(camp);
 		cb.writeInt(faqiSeatCount);
 		cb.writeInt(yingzhanSeatCount);
 		cb.writeLong(sql_id);

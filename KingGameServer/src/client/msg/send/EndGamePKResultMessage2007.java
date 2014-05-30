@@ -11,9 +11,10 @@ public class EndGamePKResultMessage2007 extends SocketMessageToSend {
 	/**
 	 * 	0表示成功 否则失败
 	 */
-	int status;
-	public EndGamePKResultMessage2007(int status) {
+	int status,win_side;
+	public EndGamePKResultMessage2007(int status,int win_side) {
 		this.status=status;
+		this.win_side=win_side;
 	}
 
 	@Override
@@ -21,6 +22,7 @@ public class EndGamePKResultMessage2007 extends SocketMessageToSend {
 		ChannelBuffer cb = ChannelBuffers.dynamicBuffer();
 		cb.writeShort(2007);
 		cb.writeInt(status);
+		cb.writeInt(win_side);
 		return cb;
 	}
 

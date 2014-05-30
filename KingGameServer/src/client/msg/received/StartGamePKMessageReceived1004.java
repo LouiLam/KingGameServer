@@ -15,6 +15,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
+import org.json.JSONObject;
 
 import pk.PK;
 import pk.PKManager;
@@ -64,15 +65,17 @@ public class StartGamePKMessageReceived1004 extends SocketMessageReceived {
 		}
 	}
 	public  void  httpGetFightStart(Channel channel) throws Exception {
+		  PK pk=PKManager.getInstance().getPKBySqlID(sql_id);
 		String url="http://www.hexcm.com/yxlm/member/fight_add.php?";
 		String gtEncode = URLEncoder.encode(gt, "utf-8" ); 
 		String ytEncode = URLEncoder.encode(yt, "utf-8" ); 
 		String uu="action=stac&id="+sql_id+"&status=1&gt="+gtEncode+"&yt="+ytEncode;	
+		String other="&creator="+roleName+"&area="+pk.area;
         CloseableHttpClient httpclient = HttpClients.createDefault();
-        System.out.println(url+uu);
+        System.out.println(url+uu+other);
         try {
-            HttpGet httpGet = new HttpGet(url+uu);
-            PKHttpStringMgr.EndMap.put(sql_id, url+"action=stac&id="+sql_id+"&status=2&gt="+gtEncode+"&yt="+ytEncode+"&roleName="+roleName);
+            HttpGet httpGet = new HttpGet(url+uu+other);
+            PKHttpStringMgr.EndMap.put(sql_id, url+"action=stac&id="+sql_id+"&status=2&gt="+gtEncode+"&yt="+ytEncode+"&creator="+roleName+"&area="+pk.area+"&money="+pk.point+"&reason=1");
             CloseableHttpResponse response1 = httpclient.execute(httpGet);
             // The underlying HTTP connection is still held by the response object
             // to allow the response content to be streamed directly from the network socket.
@@ -83,14 +86,25 @@ public class StartGamePKMessageReceived1004 extends SocketMessageReceived {
             try {
             	String str=EntityUtils.toString(response1
  						.getEntity());
-                System.out.println(response1.getStatusLine());
-                PK pk=PKManager.getInstance().getPKBySqlID(sql_id);
-                if(response1.getStatusLine().getStatusCode()==HttpStatus.SC_OK&&str.equals("11"))
+//            	status_creator(1：用户名正常  -1: 用户名未填写  -2：用户名不存在)
+//                status_exe(1:正常  -1：创建失败)
+//            	{"status_ok":"1","status_exe":"1"}
+                System.out.println(str);
+               JSONObject obj=new JSONObject(str);
+               int status_ok=obj.getInt("status_ok");
+               int status_exe=obj.getInt("status_exe");
+             
+                if(response1.getStatusLine().getStatusCode()==HttpStatus.SC_OK)
                 {
                 	//用户点击开始游戏按钮成功
                 	//用户点击结束游戏按钮成功，解散
-                	
-                	pk.channelGroup.write(new StartGamePKResultMessage2006(0,pk.id).pack());
+                	if(status_ok==1)
+                	{pk.channelGroup.write(new StartGamePKResultMessage2006(0,pk.id).pack());}
+                	else
+                	{
+                		//用户点击开始游戏按钮失败
+                    	channel.write(new StartGamePKResultMessage2006(1,pk.id).pack());
+                	}
                 }
                 else
                 {

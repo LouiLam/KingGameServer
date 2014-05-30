@@ -11,6 +11,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
+import org.json.JSONObject;
 
 import pk.PK;
 import pk.PKManager;
@@ -54,16 +55,30 @@ public class EndGamePKMessageReceived1005 extends SocketMessageReceived {
 
 			try {
 				String str = EntityUtils.toString(response1.getEntity());
-				System.out.println(response1.getStatusLine());
+				System.out.println(str);
+//				返回数据：status_sf(1：正常  -1:用户名不存在   -2：结果异常[界面显示“游戏暂未结束或其他异常原因”])
+//		          win_side（1：挑战方胜   2：应战方胜）
+//			  	  status_exe（1：结果判断成功 2：结果判断异常）
+//				{"status_sf":"1","win_side":"2","status_exe":"1"}
+				int win_side = 0;
 				if (response1.getStatusLine().getStatusCode() == HttpStatus.SC_OK
-						&& str.equals("11")) {
+						) {
+					JSONObject obj=new JSONObject(str);
+					int status_sf=obj.getInt("status_sf");
+					
+					if(status_sf==-2)
+					{
+						channel.write(new EndGamePKResultMessage2007(2,win_side).pack());
+						return;
+					}
+					win_side=obj.getInt("win_side");
 					// 用户点击结束游戏按钮成功，解散
 					PK pk = PKManager.getInstance().removePK(sql_id);
-					pk.channelGroup.write(new EndGamePKResultMessage2007(0)
+					pk.channelGroup.write(new EndGamePKResultMessage2007(0,win_side)
 							.pack());
 				} else {
 					// 用户点击开始游戏按钮失败
-					channel.write(new EndGamePKResultMessage2007(1).pack());
+					channel.write(new EndGamePKResultMessage2007(1,win_side).pack());
 				}
 				HttpEntity entity1 = response1.getEntity();
 				// do something useful with the response body
