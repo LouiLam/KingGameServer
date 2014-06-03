@@ -16,6 +16,7 @@ public class HeartMessageReceived1000 extends SocketMessageReceived {
 	System.out.println("收到客户端心跳包");
 	if(channel.isConnected())
 	{
+		System.out.println("回发客户端心跳包");
 		channel.write(new HeartMessage2000().pack());
 	}
 	}
