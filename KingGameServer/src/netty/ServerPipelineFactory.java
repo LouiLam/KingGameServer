@@ -12,10 +12,10 @@ public class ServerPipelineFactory implements ChannelPipelineFactory {
 		
 		pipeline.addLast("decoder", new MsgDecoder());
 		pipeline.addLast("encoder", new MsgEncoder());
-		HashedWheelTimer timer = new  HashedWheelTimer();
-		
-		pipeline.addLast("timeout", new IdleStateHandler(timer,60, 60, 0));//心跳包 监听器
-		pipeline.addLast("hearbeat", new HeartBeatHandler());//心跳包
+//		HashedWheelTimer timer = new  HashedWheelTimer();
+//		
+//		pipeline.addLast("timeout", new IdleStateHandler(timer,60, 60, 0));//心跳包 监听器
+//		pipeline.addLast("hearbeat", new HeartBeatHandler());//心跳包
 		
 		pipeline.addLast("handler", new MessageHandler());
 		
