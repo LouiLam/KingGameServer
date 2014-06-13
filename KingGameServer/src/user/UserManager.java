@@ -64,7 +64,12 @@ public class UserManager {
 //			user.leaveRoom();
 //		}
 	}
-
+	public void removeUser(String  id) {
+		idChannelMap.remove(id);
+//		if(user != null){
+//			user.leaveRoom();
+//		}
+	}
 	public PKUser getUserByID(String id) {
 		return idUserMap.get(id);
 	}

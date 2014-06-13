@@ -77,6 +77,7 @@ public class MessageHandler extends SimpleChannelHandler {
 					logger.info("玩家断线，移除所在房间roomSqlID" + roomSqlID+"玩家数量"+UserManager.getInstance().getCurUserNum());
 				}
 			}
+			UserManager.getInstance().removeUser(userTemp.id);
 			logger.info("玩家断线");
 		} else {
 			e.getCause().printStackTrace();
