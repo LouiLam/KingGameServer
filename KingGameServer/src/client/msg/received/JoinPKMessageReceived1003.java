@@ -113,7 +113,7 @@ public class JoinPKMessageReceived1003 extends SocketMessageReceived {
 
 	public boolean httpGetFightStart(Channel channel) throws Exception {
 		PK pk = PKManager.getInstance().getPKBySqlID(sql_id);
-		String url = "http://www.hexcm.com/yxlm/member/fight_add.php?action=join_check";
+		String url = "http://198.204.255.98/yxlm/member/fight_add.php?action=join_check";
 		String other = "&creator=" + roleName + "&area=" + pk.area;
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		System.out.println(url + other);

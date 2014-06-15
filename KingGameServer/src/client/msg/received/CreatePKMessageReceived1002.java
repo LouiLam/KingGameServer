@@ -102,7 +102,7 @@ public class CreatePKMessageReceived1002 extends SocketMessageReceived {
 		CloseableHttpClient httpClient = HttpClients.createDefault();
 		HttpPost httpPost = new HttpPost(
 				
-				"http://www.hexcm.com/yxlm/member/fight_add.php");
+				"http://198.204.255.98/yxlm/member/fight_add.php");
 
 		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
 		nvps.add(new BasicNameValuePair("action", "dopost"));
