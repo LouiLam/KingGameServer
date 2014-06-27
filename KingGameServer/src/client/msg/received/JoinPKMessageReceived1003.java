@@ -25,7 +25,6 @@ public class JoinPKMessageReceived1003 extends SocketMessageReceived {
 	long sql_id;
 	int camp;
 	String id, roleName, password;
-	int type;
 	int uid;
 
 	@Override
@@ -72,14 +71,16 @@ public class JoinPKMessageReceived1003 extends SocketMessageReceived {
 			e.printStackTrace();
 		}
 
-		type = PKManager.getInstance().getPKBySqlID(sql_id).type;
 		PK pk = PKManager.getInstance().getPKBySqlID(sql_id);
 		if ((camp == 1 && pk.faqiSeatCount == pk.type)
 				|| (camp == 2 && pk.yingzhanSeatCount == pk.type))// 加入方 人数已满,返回
 		{
-			channel.write(new JoinPKResultMessage2003(id, roleName, camp, -1,
-					pk.userMap, type, -1, pk.title, pk.area, pk.point,
-					pk.faqiSeatCount, pk.yingzhanSeatCount, pk.sql_id).pack());
+//			channel.write(new JoinPKResultMessage2003(id, roleName, camp, -1,
+//					pk.userMap, pk.type, -1, pk.title, pk.area, pk.point,
+//					pk.faqiSeatCount, pk.yingzhanSeatCount, pk.sql_id).pack());
+			
+			channel.write(new JoinPKResultMessage2003(-1,id, roleName, camp, -1,
+					pk).pack());
 			return;
 		}
 		int seatID = camp == 1 ? pk.faqiSeatCount - 1
@@ -93,10 +94,8 @@ public class JoinPKMessageReceived1003 extends SocketMessageReceived {
 			pk.channelGroup.add(channel);
 
 			pk.channelGroup
-					.write(new JoinPKResultMessage2003(id, roleName, camp,
-							seatID, pk.userMap, type, 0, pk.title, pk.area,
-							pk.point, pk.faqiSeatCount, pk.yingzhanSeatCount,
-							pk.sql_id).pack());
+					.write(new JoinPKResultMessage2003(0,id, roleName, camp,
+							seatID, pk).pack());
 			PKManager.getInstance().refreshPK();
 			// System.out.println("pk.count:"+pk.count+",pk.type*2:"+pk.type*2);
 			if (pk.faqiSeatCount == pk.type && pk.yingzhanSeatCount == pk.type) {
@@ -104,9 +103,8 @@ public class JoinPKMessageReceived1003 extends SocketMessageReceived {
 			}
 		} else // 密码错误
 		{
-			channel.write(new JoinPKResultMessage2003(id, roleName, camp,
-					seatID, pk.userMap, type, -2, pk.title, pk.area, pk.point,
-					pk.faqiSeatCount, pk.yingzhanSeatCount, pk.sql_id).pack());
+			channel.write(new JoinPKResultMessage2003(-2,id, roleName, camp,
+					seatID, pk).pack());
 		}
 
 	}
@@ -143,16 +141,13 @@ public class JoinPKMessageReceived1003 extends SocketMessageReceived {
 					if (status_join == 1) {
 						return true;
 					} else {
-						channel.write(new JoinPKResultMessage2003(id, roleName,
-								camp, -1, pk.userMap, type, -3, pk.title,
-								pk.area, pk.point, pk.faqiSeatCount,
-								pk.yingzhanSeatCount, pk.sql_id).pack());
+						channel.write(new JoinPKResultMessage2003(-3,id, roleName,
+								camp, -1, pk).pack());
 						return false;
 					}
 				}
-				channel.write(new JoinPKResultMessage2003(id, roleName, camp,
-						-1, pk.userMap, type, -3, pk.title, pk.area, pk.point,
-						pk.faqiSeatCount, pk.yingzhanSeatCount, pk.sql_id)
+				channel.write(new JoinPKResultMessage2003(-3,id, roleName, camp,
+						-1, pk)
 						.pack());
 				HttpEntity entity1 = response1.getEntity();
 

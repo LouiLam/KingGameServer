@@ -46,7 +46,19 @@ public class MessageHandler extends SimpleChannelHandler {
 
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) {
+		logger.info("exceptionCaught");
 		if (e.getCause() instanceof IOException) {
+			
+			dosomething(ctx, e);
+		} else {
+			e.getCause().printStackTrace();
+		}
+	}
+
+	@Override
+	public void channelClosed(ChannelHandlerContext ctx, ChannelStateEvent e) {
+		logger.info("channelClosed");
+		try {
 			PKUser userTemp = UserManager.getInstance().removeUser(e.getChannel());
 			if (userTemp != null) {
 				long roomSqlID = userTemp.roomSqlID;
@@ -54,7 +66,7 @@ public class MessageHandler extends SimpleChannelHandler {
 					//房主退出
 					if(PKManager.getInstance().getPKBySqlID(roomSqlID).channelHost==ctx.getChannel())
 					{
-						logger.info("房主异常退出，解散房间,通知其他玩家退出房间，并且处理其他玩家退出逻辑");
+						logger.info("房主channelClosed退出，解散房间,通知其他玩家退出房间，并且处理其他玩家退出逻辑");
 						PKManager.getInstance().getPKBySqlID(roomSqlID).channelGroup
 						.write(new HostLeavePKResultMessage2009(userTemp.id).pack());
 						PKManager.getInstance().removePK(roomSqlID);
@@ -72,27 +84,50 @@ public class MessageHandler extends SimpleChannelHandler {
 						.removePKUser(user.id, user.Camp, user.seatID);
 						PKManager.getInstance().refreshPK();
 					}
-					
 				
-					logger.info("玩家断线，移除所在房间roomSqlID" + roomSqlID+"玩家数量"+UserManager.getInstance().getCurUserNum());
 				}
 			}
-			UserManager.getInstance().removeUser(userTemp.id);
-			logger.info("玩家断线");
-		} else {
-			e.getCause().printStackTrace();
-		}
-	}
-
-	@Override
-	public void channelClosed(ChannelHandlerContext ctx, ChannelStateEvent e) {
-		try {
-			UserManager.getInstance().removeUser(e.getChannel());
 			logger.info("玩家关闭连接");
 			logger.info("连接数量" + channelGroup.size());
 
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
+	}
+	
+	private void dosomething(ChannelHandlerContext ctx, ExceptionEvent e)
+	{
+		PKUser userTemp = UserManager.getInstance().removeUser(e.getChannel());
+		if (userTemp != null) {
+			long roomSqlID = userTemp.roomSqlID;
+			if (roomSqlID != -1) {
+				//房主退出
+				if(PKManager.getInstance().getPKBySqlID(roomSqlID).channelHost==ctx.getChannel())
+				{
+					logger.info("房主exceptionCaught异常退出，解散房间,通知其他玩家退出房间，并且处理其他玩家退出逻辑");
+					PKManager.getInstance().getPKBySqlID(roomSqlID).channelGroup
+					.write(new HostLeavePKResultMessage2009(userTemp.id).pack());
+					PKManager.getInstance().removePK(roomSqlID);
+					
+				}
+				//非房主退出
+				else
+				{
+					PK pk=PKManager.getInstance().getPKBySqlID(roomSqlID);
+					PKUser user=pk.getPKUserByRoleName(userTemp.id);
+					pk.channelGroup
+					.write(new CrashLeavePKResultMessage2004(user.id,
+							user.Camp, user.seatID,pk.sql_id).pack());
+					PKManager.getInstance().getPKBySqlID(roomSqlID)
+					.removePKUser(user.id, user.Camp, user.seatID);
+					PKManager.getInstance().refreshPK();
+				}
+				
+			
+				logger.info("玩家断线，移除所在房间roomSqlID" + roomSqlID+"玩家数量"+UserManager.getInstance().getCurUserNum());
+			}
+		}
+		UserManager.getInstance().removeUser(userTemp.id);
+		logger.info("玩家断线");
 	}
 }

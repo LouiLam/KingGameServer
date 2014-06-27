@@ -10,7 +10,6 @@ import pk.PK;
 
 public class CreatePKResultMessage2002 extends SocketMessageToSend {
 
-	private static Logger logger = Logger.getLogger(CreatePKResultMessage2002.class);
 	PK pk;
 	/**
 	 * 0表示成功，否则表示失败
