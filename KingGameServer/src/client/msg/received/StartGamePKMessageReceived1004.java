@@ -66,7 +66,7 @@ public class StartGamePKMessageReceived1004 extends SocketMessageReceived {
 	}
 	public  void  httpGetFightStart(Channel channel) throws Exception {
 		  PK pk=PKManager.getInstance().getPKBySqlID(sql_id);
-		String url="http://www.hexcm.com/yxlm/member/fight_add.php?";
+		String url="http://124.248.237.30/yxlm/member/fight_add.php?";
 		String gtEncode = URLEncoder.encode(gt, "utf-8" ); 
 		String ytEncode = URLEncoder.encode(yt, "utf-8" ); 
 		String uu="action=stac&id="+sql_id+"&status=1&gt="+gtEncode+"&yt="+ytEncode;	

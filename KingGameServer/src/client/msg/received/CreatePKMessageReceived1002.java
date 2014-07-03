@@ -25,6 +25,7 @@ import pk.PK;
 import pk.PKManager;
 import user.UserManager;
 import client.msg.send.CreatePKResultMessage2002;
+import client.msg.send.PointNotEnoughMessage2017;
 import client.msg.send.RoleNameErrorMessage2015;
 
 public class CreatePKMessageReceived1002 extends SocketMessageReceived {
@@ -102,7 +103,7 @@ public class CreatePKMessageReceived1002 extends SocketMessageReceived {
 		CloseableHttpClient httpClient = HttpClients.createDefault();
 		HttpPost httpPost = new HttpPost(
 				
-				"http://www.hexcm.com/yxlm/member/fight_add.php");
+				"http://124.248.237.30/yxlm/member/fight_add.php");
 
 		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
 		nvps.add(new BasicNameValuePair("action", "dopost"));
@@ -132,9 +133,14 @@ public class CreatePKMessageReceived1002 extends SocketMessageReceived {
 				
 			
 				int status_creator=obj.getInt("status_creator");
+				int  status_exe=obj.getInt("status_creator");
 				if(status_creator==-1||status_creator==-2)
 				{
 					channel.write(new RoleNameErrorMessage2015().pack());
+				}
+				else if(status_creator==-3)
+				{
+					channel.write(new PointNotEnoughMessage2017().pack());
 				}
 				else
 				{	

@@ -16,9 +16,11 @@ import org.json.JSONObject;
 
 import pk.PK;
 import pk.PKManager;
+import user.PKUser;
 import user.UserManager;
 import client.msg.send.CanStartGamePKMessage2005;
 import client.msg.send.JoinPKResultMessage2003;
+import client.msg.send.PointNotEnoughMessage2017;
 
 public class JoinPKMessageReceived1003 extends SocketMessageReceived {
 
@@ -111,8 +113,8 @@ public class JoinPKMessageReceived1003 extends SocketMessageReceived {
 
 	public boolean httpGetFightStart(Channel channel) throws Exception {
 		PK pk = PKManager.getInstance().getPKBySqlID(sql_id);
-		String url = "http://www.hexcm.com/yxlm/member/fight_add.php?action=join_check";
-		String other = "&creator=" + roleName + "&area=" + pk.area;
+		String url = "http://124.248.237.30/yxlm/member/fight_add.php?action=join_check";
+		String other = "&creator=" + roleName + "&area=" + pk.area+"&uid="+uid+"&price="+pk.point;
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		System.out.println(url + other);
 		try {
@@ -140,7 +142,13 @@ public class JoinPKMessageReceived1003 extends SocketMessageReceived {
 					// 用户点击结束游戏按钮成功，解散
 					if (status_join == 1) {
 						return true;
-					} else {
+					} 
+					else if(status_join==-3)
+					{
+						channel.write(new PointNotEnoughMessage2017().pack());
+						return false;
+					}
+					else {
 						channel.write(new JoinPKResultMessage2003(-3,id, roleName,
 								camp, -1, pk).pack());
 						return false;

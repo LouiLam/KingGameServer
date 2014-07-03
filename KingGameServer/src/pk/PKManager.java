@@ -68,12 +68,11 @@ public class PKManager {
 
 	public void refreshPK() {
 		// 刷新列表
-		HashMap<Long, PK> map = PKManager.getInstance().getPKMap();
-		Iterator<Long> it = map.keySet().iterator();
+		Iterator<Long> it = pkMap.keySet().iterator();
 		MessageHandler.channelGroup.write(new RoomPKBeginMessage2013().pack());
 		while (it.hasNext()) {
 			long key = it.next();
-			PK pk1 = map.get(key);
+			PK pk1 = pkMap.get(key);
 			MessageHandler.channelGroup
 					.write(new RoomPKMessage2001(pk1).pack());
 		}
@@ -84,7 +83,14 @@ public class PKManager {
 		pkMap.put(sqlid, pk);
 		refreshPK();
 	}
-
+	public void putNoRefresh(long sqlid, PK pk) {
+		pkMap.put(sqlid, pk);
+	}
+	public PK removePKNoRefres(long sqlid) {
+		// 刷新列表
+		PK pk = pkMap.remove(sqlid);
+		return pk;
+	}
 	/**
 	 * 获取挑战条目数量
 	 * 

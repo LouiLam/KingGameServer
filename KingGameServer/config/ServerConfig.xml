@@ -3,7 +3,7 @@
     
     <ip>192.168.1.101</ip>
 	<port>4322</port>
-	<maxUserNum>10</maxUserNum>
+	<maxUserNum>10000</maxUserNum>
 	
 	<centerServer>
 	    <ip>127.0.0.1</ip>
