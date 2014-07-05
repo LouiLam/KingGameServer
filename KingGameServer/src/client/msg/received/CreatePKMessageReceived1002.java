@@ -32,7 +32,7 @@ public class CreatePKMessageReceived1002 extends SocketMessageReceived {
 
 	private static Logger logger = Logger.getLogger(CreatePKMessageReceived1002.class);
 	String area,map,title,des,id,roleName,password;
-	int point,type;
+	int point,type,uid;
 	PK pk;
 	@Override
 	public void parse(ChannelBuffer buffer) {
@@ -82,7 +82,7 @@ public class CreatePKMessageReceived1002 extends SocketMessageReceived {
 			// 点数
 			point = buffer.readInt();
 			
-			int uid= buffer.readInt();
+			 uid= buffer.readInt();
 			pk=new PK(id,roleName,title, area, map,des, type, point,uid,password);
 			
 		
@@ -103,7 +103,7 @@ public class CreatePKMessageReceived1002 extends SocketMessageReceived {
 		CloseableHttpClient httpClient = HttpClients.createDefault();
 		HttpPost httpPost = new HttpPost(
 				
-				"http://124.248.237.30/yxlm/member/fight_add.php");
+				"http://www.hexcm.com/yxlm/member/fight_add.php");
 
 		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
 		nvps.add(new BasicNameValuePair("action", "dopost"));
@@ -116,7 +116,7 @@ public class CreatePKMessageReceived1002 extends SocketMessageReceived {
 		nvps.add(new BasicNameValuePair("description",des));
 		nvps.add(new BasicNameValuePair("type",type+""));
 		nvps.add(new BasicNameValuePair("creator",roleName));
-		
+		nvps.add(new BasicNameValuePair("uid_c",uid+""));
 		try {
 			httpPost.setEntity(new UrlEncodedFormEntity(nvps,"utf-8"));
 			CloseableHttpResponse httppHttpResponse2 = httpClient
