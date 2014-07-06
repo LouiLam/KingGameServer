@@ -16,7 +16,6 @@ import org.json.JSONObject;
 
 import pk.PK;
 import pk.PKManager;
-import user.PKUser;
 import user.UserManager;
 import client.msg.send.CanStartGamePKMessage2005;
 import client.msg.send.JoinPKResultMessage2003;
@@ -92,13 +91,12 @@ public class JoinPKMessageReceived1003 extends SocketMessageReceived {
 			PKManager.getInstance().getPKBySqlID(sql_id)
 					.addPKUser(id, roleName, camp, uid);
 			UserManager.getInstance().getUserByID(id).roomSqlID = pk.sql_id;
-
+			PKManager.getInstance().refreshPK();
 			pk.channelGroup.add(channel);
-
 			pk.channelGroup
 					.write(new JoinPKResultMessage2003(0,id, roleName, camp,
 							seatID, pk).pack());
-			PKManager.getInstance().refreshPK();
+			
 			// System.out.println("pk.count:"+pk.count+",pk.type*2:"+pk.type*2);
 			if (pk.faqiSeatCount == pk.type && pk.yingzhanSeatCount == pk.type) {
 				pk.channelHost.write(new CanStartGamePKMessage2005().pack());
