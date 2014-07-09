@@ -32,7 +32,7 @@ public class LoginMessage1001 extends SocketMessageReceived{
 			logger.error(id+"此用户已登陆过：" + ", ip === " + channel.getRemoteAddress());
 			Channel	close_channel=UserManager.getInstance().getChannelByID(id);
 			close_channel.write(new RepeatLoginErrorMessage2014().pack());
-			close_channel.close();
+//			close_channel.close();
 		}
 		//服务器人满 
 		if(UserManager.getInstance().isFull()){
