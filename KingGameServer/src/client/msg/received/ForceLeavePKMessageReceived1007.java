@@ -58,7 +58,7 @@ public class ForceLeavePKMessageReceived1007 extends SocketMessageReceived {
 	}
 	
 	public  void  httpGetFightEnd(Channel channel,int uid,PK pk,PKUser user) throws Exception {
-		String url="http://218.76.35.162/yxlm/member/fight_score.php?action=fight&reason=0";
+		String url="http://121.127.253.207/yxlm/member/fight_score.php?action=fight&reason=0";
 		String paras="&uid="+uid+"&fightid="+pk.sql_id+"&money=-"+pk.point;
 		
         CloseableHttpClient httpclient = HttpClients.createDefault();
