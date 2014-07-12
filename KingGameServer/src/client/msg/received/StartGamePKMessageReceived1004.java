@@ -64,10 +64,10 @@ public class StartGamePKMessageReceived1004 extends SocketMessageReceived {
 	public void httpGetFightStart(Channel channel) throws Exception {
 		PK pk = PKManager.getInstance().getPKBySqlID(sql_id);
 		String url = "http://121.127.253.207/yxlm/member/fight_add.php?";
-		String gtEncode = URLEncoder.encode(gt, "utf-8");
-		String ytEncode = URLEncoder.encode(yt, "utf-8");
-		String uu = "action=stac&id=" + sql_id + "&status=1&gt=" + gtEncode
-				+ "&yt=" + ytEncode;
+//		String gtEncode = URLEncoder.encode(gt, "utf-8");
+//		String ytEncode = URLEncoder.encode(yt, "utf-8");
+		String uu = "action=stac&id=" + sql_id + "&status=1&gt=" + gt
+				+ "&yt=" + yt;
 		String other = "&creator=" + roleName + "&area=" + pk.area;
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		System.out.println(url + uu + other);
@@ -76,7 +76,7 @@ public class StartGamePKMessageReceived1004 extends SocketMessageReceived {
 		try {
 			HttpGet httpGet = new HttpGet(url + uu + other);
 			PKHttpStringMgr.EndMap.put(sql_id, url + "action=stac&id=" + sql_id
-					+ "&status=2&gt=" + gtEncode + "&yt=" + ytEncode
+					+ "&status=2&gt=" + gt + "&yt=" + yt
 					+ "&creator=" + roleName + "&area=" + pk.area + "&money="
 					+ pk.point + "&reason=1" + "&gtname=" + gtname + "&ytname="
 					+ ytname);
