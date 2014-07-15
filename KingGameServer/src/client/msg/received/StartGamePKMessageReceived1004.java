@@ -79,7 +79,7 @@ public class StartGamePKMessageReceived1004 extends SocketMessageReceived {
 		try {
 			HttpGet httpGet = new HttpGet(url + uu + other);
 			PKHttpStringMgr.EndMap.put(sql_id, url + "action=stac&id=" + sql_id
-					+ "&status=2&gt=" + gt + "&yt=" + yt
+					+ "&status=2&gt=" + gtEncode + "&yt=" + ytEncode
 					+ "&creator=" + roleName + "&area=" + pk.area + "&money="
 					+ pk.point + "&reason=1" + "&gtname=" + gtnameEncode + "&ytname="
 					+ ytnameEncode);
