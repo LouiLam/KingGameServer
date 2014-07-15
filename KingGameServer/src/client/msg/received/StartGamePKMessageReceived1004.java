@@ -68,7 +68,8 @@ public class StartGamePKMessageReceived1004 extends SocketMessageReceived {
 		String ytEncode = URLEncoder.encode(yt, "utf-8");
 		String uu = "action=stac&id=" + sql_id + "&status=1&gt=" + gtEncode
 				+ "&yt=" + ytEncode;
-		String other = "&creator=" + roleName + "&area=" + pk.area;
+		String other = "&creator=" + roleName + "&area=" + pk.area+"&gtname=" + gtname + "&ytname="
+				+ ytname;
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		System.out.println(url + uu + other);
 		
